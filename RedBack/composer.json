@@ -10,11 +10,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "darkaonline/l5-swagger": "^9.0",
         "google/apiclient": "^2.18",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "maatwebsite/excel": "^3.1",
         "reliese/laravel": "^1.4",
         "spatie/laravel-permission": "^6.18",
         "stichoza/google-translate-php": "^5.3",
@@ -22,12 +24,13 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "kitloong/laravel-migrations-generator": "^7.1",
+        "kitloong/laravel-migrations-generator": "^7.2",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
+        "orangehill/iseed": "^3.1",
         "pestphp/pest": "^3.8",
         "pestphp/pest-plugin-laravel": "^3.2"
     },

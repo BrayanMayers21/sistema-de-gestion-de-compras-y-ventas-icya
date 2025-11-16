@@ -47,8 +47,16 @@ export const getTokenInfo = (): TokenInfo => {
     return {
       isValid: true,
       isExpired,
-      permissions: !isExpired ? decodedToken.permissions : [],
-      roles: !isExpired ? decodedToken.roles : [],
+      permissions:
+        !isExpired &&
+        decodedToken.permissions &&
+        Array.isArray(decodedToken.permissions)
+          ? decodedToken.permissions
+          : [],
+      roles:
+        !isExpired && decodedToken.roles && Array.isArray(decodedToken.roles)
+          ? decodedToken.roles
+          : [],
       user: !isExpired
         ? {
             id: decodedToken.id_user,
@@ -71,7 +79,7 @@ export const getTokenInfo = (): TokenInfo => {
  */
 export const getPermissionsFromToken = (): string[] => {
   const { permissions } = getTokenInfo();
-  return permissions;
+  return permissions && Array.isArray(permissions) ? permissions : [];
 };
 
 /**
@@ -79,7 +87,7 @@ export const getPermissionsFromToken = (): string[] => {
  */
 export const getRolesFromToken = (): string[] => {
   const { roles } = getTokenInfo();
-  return roles;
+  return roles && Array.isArray(roles) ? roles : [];
 };
 
 /**
@@ -117,7 +125,9 @@ export const clearSessionCookies = (): void => {
  */
 export const hasPermission = (permission: string): boolean => {
   const { permissions } = getTokenInfo();
-  return permissions.includes(permission);
+  return permissions && Array.isArray(permissions)
+    ? permissions.includes(permission)
+    : false;
 };
 
 /**
@@ -125,7 +135,7 @@ export const hasPermission = (permission: string): boolean => {
  */
 export const hasRole = (role: string): boolean => {
   const { roles } = getTokenInfo();
-  return roles.includes(role);
+  return roles && Array.isArray(roles) ? roles.includes(role) : false;
 };
 
 /**
@@ -214,7 +224,7 @@ export const login = async (credentials: UserCredentials): Promise<boolean> => {
     );
 
     const data = response.data;
-    const decodedToken = jwtDecode<DecodedToken>(data.token);
+    const decodedToken = jwtDecode<DecodedToken>(data.data.token);
 
     const cookieOptions = {
       expires: new Date((decodedToken.exp || 0) * 1000),
@@ -224,7 +234,7 @@ export const login = async (credentials: UserCredentials): Promise<boolean> => {
     };
 
     // Guardar información en cookies
-    Cookies.set("token", data.token, cookieOptions);
+    Cookies.set("token", data.data.token, cookieOptions);
     Cookies.set(
       "nombre_usuario",
       decodedToken.nombre_de_usuario,

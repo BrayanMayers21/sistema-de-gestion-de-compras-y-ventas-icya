@@ -141,7 +141,6 @@ class LoginController extends Controller
                 //     'permisos'        => $usuario->getAllPermissions()->pluck('name'),
                 // ],
             ], 'Login exitoso.', 200);
-
         } catch (ValidationException $e) {
             return $this->errorResponse('Datos de entrada inválidos.', 422, $e->errors());
         } catch (Exception $e) {
@@ -188,11 +187,10 @@ class LoginController extends Controller
             'id_user'           => $usuario->idusuarios,
             'nombre_de_usuario' => $usuario->nomusu,
             'foto_perfil'      => $usuario->persona->fotografia ?? null,
-            // 'roles'            => $usuario->getRoleNames(),
-            // 'permisos'         => $usuario->getAllPermissions()->pluck('name'),
+            'roles'            => $usuario->getRoleNames(),
+            'permissions'      => $usuario->getAllPermissions()->pluck('name'),
             'codigo_usuario'   => $usuario->codigo_usuario,
             'exp' => now()->addMinutes($tiempoMinutos)->timestamp
-            // Agregar información de la persona si está disponible
         ];
 
         // Crear el token con custom claims

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Test Reporte Obras Contables</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .card {
+                border: 1px solid #ddd;
+                padding: 20px;
+                margin: 20px 0;
+                border-radius: 5px;
+            }
+            .btn {
+                background-color: #007bff;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 5px;
+                display: inline-block;
+            }
+            .btn:hover {
+                background-color: #0056b3;
+            }
+            .btn-success {
+                background-color: #28a745;
+            }
+            .btn-success:hover {
+                background-color: #1e7e34;
+            }
+            .btn-info {
+                background-color: #17a2b8;
+            }
+            .btn-info:hover {
+                background-color: #138496;
+            }
+            .form-group {
+                margin: 15px 0;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+            input,
+            select {
+                padding: 8px;
+                width: 200px;
+            }
+            .alert {
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 4px;
+            }
+            .alert-info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                color: #0c5460;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🏗️ Reporte de Obras Contables</h1>
+
+            <div class="alert alert-info">
+                <strong>Nota:</strong> Para usar estas funciones necesitas estar
+                autenticado con un token JWT válido.
+            </div>
+
+            <div class="card">
+                <h3>📊 Reportes Completos - Diseño Mejorado</h3>
+                <p>Reportes agrupados por obra (sin repetición de nombres):</p>
+                <a
+                    href="/api/obras-contables/export/excel-grouped"
+                    class="btn btn-success"
+                    target="_blank"
+                >
+                    📊 Excel Agrupado
+                </a>
+                <a
+                    href="/api/obras-contables/export/pdf"
+                    class="btn btn-success"
+                    target="_blank"
+                >
+                    📄 PDF Agrupado
+                </a>
+                <a
+                    href="/api/obras-contables/preview"
+                    class="btn btn-info"
+                    target="_blank"
+                >
+                    👁️ Vista Previa
+                </a>
+            </div>
+
+            <div class="card">
+                <h3>📋 Reportes Tradicionales</h3>
+                <p>Formato tradicional (una fila por código contable):</p>
+                <a
+                    href="/api/obras-contables/export/excel"
+                    class="btn"
+                    target="_blank"
+                >
+                    📊 Excel Tradicional
+                </a>
+                <a
+                    href="/api/obras-contables/reporte"
+                    class="btn btn-info"
+                    target="_blank"
+                >
+                    📋 Ver JSON
+                </a>
+            </div>
+
+            <div class="card">
+                <h3>📅 Reporte por Rango de Fechas</h3>
+                <form id="dateRangeForm">
+                    <div class="form-group">
+                        <label for="fecha_inicio">Fecha Inicio:</label>
+                        <input
+                            type="date"
+                            id="fecha_inicio"
+                            name="fecha_inicio"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin">Fecha Fin:</label>
+                        <input
+                            type="date"
+                            id="fecha_fin"
+                            name="fecha_fin"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="formato">Formato:</label>
+                        <select id="formato" name="formato">
+                            <option value="excel">Excel (.xlsx)</option>
+                            <option value="pdf">PDF (.pdf)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">
+                        🔍 Generar Reporte
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>📈 Datos y Estadísticas</h3>
+                <p>Ver datos en formato JSON o estadísticas:</p>
+                <a
+                    href="/api/obras-contables/reporte"
+                    class="btn"
+                    target="_blank"
+                >
+                    📋 Ver Datos JSON
+                </a>
+                <a
+                    href="/api/obras-contables/stats"
+                    class="btn btn-info"
+                    target="_blank"
+                >
+                    📊 Ver Estadísticas
+                </a>
+            </div>
+
+            <div class="card">
+                <h3>🛠️ Endpoints de la API</h3>
+                <ul>
+                    <li>
+                        <code>GET /api/obras-contables/reporte</code> - Listar
+                        datos
+                    </li>
+                    <li>
+                        <code>GET /api/obras-contables/export/excel</code> -
+                        Exportar a Excel
+                    </li>
+                    <li>
+                        <code>GET /api/obras-contables/export/pdf</code> -
+                        Exportar a PDF
+                    </li>
+                    <li>
+                        <code>GET /api/obras-contables/preview</code> - Vista
+                        previa HTML
+                    </li>
+                    <li>
+                        <code
+                            >POST /api/obras-contables/reporte-por-fechas</code
+                        >
+                        - Reporte por fechas
+                    </li>
+                    <li>
+                        <code>GET /api/obras-contables/stats</code> -
+                        Estadísticas
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📝 Ejemplo de Consulta SQL</h3>
+                <pre
+                    style="
+                        background: #f4f4f4;
+                        padding: 15px;
+                        border-radius: 5px;
+                        overflow-x: auto;
+                    "
+                >
+SELECT oc.fecha_registro, o.codigo, o.nom_obra, 
+       cc.codigo_contable, cc.nombre_contable, cc.descripcion 
+FROM obras_codigos oc
+INNER JOIN obras o ON o.idobras = oc.fk_idobras
+INNER JOIN codigos_contables cc ON cc.idcodigos_contables = oc.fk_idcodigos_contables
+ORDER BY oc.fecha_registro DESC;
+            </pre
+                >
+            </div>
+        </div>
+
+        <script>
+            document
+                .getElementById("dateRangeForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    const fechaInicio =
+                        document.getElementById("fecha_inicio").value;
+                    const fechaFin = document.getElementById("fecha_fin").value;
+                    const formato = document.getElementById("formato").value;
+
+                    if (!fechaInicio || !fechaFin) {
+                        alert("Por favor, complete todas las fechas.");
+                        return;
+                    }
+
+                    if (new Date(fechaInicio) > new Date(fechaFin)) {
+                        alert(
+                            "La fecha de inicio debe ser menor o igual a la fecha de fin."
+                        );
+                        return;
+                    }
+
+                    // Crear datos para POST request
+                    const data = {
+                        fecha_inicio: fechaInicio,
+                        fecha_fin: fechaFin,
+                        formato: formato,
+                    };
+
+                    // Hacer la petición POST
+                    fetch("/api/obras-contables/reporte-por-fechas", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            // Aquí deberías agregar tu token JWT
+                            // 'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify(data),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                // Si la respuesta es OK, descargar el archivo
+                                return response.blob();
+                            } else {
+                                throw new Error(
+                                    "Error en la respuesta del servidor"
+                                );
+                            }
+                        })
+                        .then((blob) => {
+                            // Crear URL para el blob y descargar
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.style.display = "none";
+                            a.href = url;
+                            a.download = `reporte_obras_${fechaInicio}_al_${fechaFin}.${
+                                formato === "excel" ? "xlsx" : "pdf"
+                            }`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert(
+                                "Error al generar el reporte. Verifica que tengas un token JWT válido."
+                            );
+                        });
+                });
+        </script>
+    </body>
+</html>

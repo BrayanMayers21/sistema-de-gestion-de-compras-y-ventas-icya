@@ -25,34 +25,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'personas.update',
             'personas.delete',
         ];
-
-        // 2. GESTIÓN DE EMPADRONADOS
-        $empadronadosPermissions = [
-            'empadronados.view',
-            'empadronados.create',
-            'empadronados.update',
-            'empadronados.delete',
-            'empadronados.export',
-        ];
-
-        // 3. GESTIÓN DE FAMILIARES
-        $familiaresPermissions = [
-            'familiares.view',
-            'familiares.create',
-            'familiares.update',
-            'familiares.delete',
-        ];
-
-        // 4. GESTIÓN DE VIVIENDAS
-        $viviendasPermissions = [
-            'viviendas.view',
-            'viviendas.create',
-            'viviendas.update',
-            'viviendas.delete',
-            'viviendas.cortes',
-            'viviendas.reconexiones',
-        ];
-
         // 5. GESTIÓN DE USUARIOS
         $usuariosPermissions = [
             'usuarios.view',
@@ -63,87 +35,28 @@ class RolesAndPermissionsSeeder extends Seeder
             'usuarios.deactivate',
         ];
 
-        // 6. JUNTAS DIRECTIVAS
-        $juntasPermissions = [
-            'juntas.view',
-            'juntas.create',
-            'juntas.update',
-            'juntas.delete',
-            'juntas.assign_cargo',
+        $categoriasPermissions = [
+            'categorias.view',
+            'categorias.create',
+            'categorias.update',
+            'categorias.delete',
+            'categorias.reporte',
         ];
 
-        // 7. REUNIONES
-        $reunionesPermissions = [
-            'reuniones.view',
-            'reuniones.create',
-            'reuniones.update',
-            'reuniones.delete',
-            'reuniones.participaciones',
-            'reuniones.asistencia',
+        $productosPermissions = [
+            'productos.view',
+            'productos.create',
+            'productos.update',
+            'productos.delete',
+            'productos.reporte',
         ];
 
-        // 8. PAGOS Y COBRANZAS
-        $pagosPermissions = [
-            'pagos.view',
-            'pagos.create',
-            'pagos.update',
-            'pagos.delete',
-            'pagos.registrar',
-            'pagos.anular',
-            'pagos.reportes',
-            'pagos.comprobantes',
-        ];
 
-        // 9. MULTAS
-        $multasPermissions = [
-            'multas.view',
-            'multas.create',
-            'multas.update',
-            'multas.delete',
-            'multas.aplicar',
-            'multas.exonerar',
-        ];
 
-        // 10. INVENTARIOS
-        $inventariosPermissions = [
-            'inventarios.view',
-            'inventarios.create',
-            'inventarios.update',
-            'inventarios.delete',
-            'inventarios.entrada',
-            'inventarios.salida',
-        ];
 
-        // 11. EGRESOS
-        $egresosPermissions = [
-            'egresos.view',
-            'egresos.create',
-            'egresos.update',
-            'egresos.delete',
-            'egresos.aprobar',
-            'egresos.reportes',
-        ];
 
-        // 12. CAMBIOS DE TITULAR
-        $cambiosTitularPermissions = [
-            'cambios_titular.view',
-            'cambios_titular.create',
-            'cambios_titular.update',
-            'cambios_titular.delete',
-            'cambios_titular.aprobar',
-        ];
 
-        // 13. REPORTES Y ESTADÍSTICAS
-        $reportesPermissions = [
-            'reportes.financieros',
-            'reportes.empadronados',
-            'reportes.asistencias',
-            'reportes.morosos',
-            'reportes.inventarios',
-            'reportes.egresos',
-            'reportes.general',
-            'reportes.export',
-        ];
+
 
         // 14. CONFIGURACIÓN DEL SISTEMA
         $configuracionPermissions = [
@@ -168,37 +81,17 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
 
-        // 15. DOCUMENTOS Y ACTAS
 
-        $documentosPermissions = [
-            'documentos.view',
-            'documentos.create',
-            'documentos.update',
-            'documentos.delete',
-            'documentos.actas',
-            'documentos.oficios',
-            'documentos.certificados',
-        ];
 
         // ===============================
         // CREAR TODOS LOS PERMISOS
         // ===============================
         $allPermissions = array_merge(
             $personasPermissions,
-            $empadronadosPermissions,
-            $familiaresPermissions,
-            $viviendasPermissions,
             $usuariosPermissions,
-            $juntasPermissions,
-            $reunionesPermissions,
-            $pagosPermissions,
-            $multasPermissions,
-            $inventariosPermissions,
-            $egresosPermissions,
-            $cambiosTitularPermissions,
-            $reportesPermissions,
+            $categoriasPermissions,
+            $productosPermissions,
             $configuracionPermissions,
-            $documentosPermissions
         );
 
         foreach ($allPermissions as $permission) {
@@ -217,18 +110,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $presidente = Role::create(['name' => 'presidente']);
         $presidentePermissions = array_merge(
             $personasPermissions,
-            $empadronadosPermissions,
-            $familiaresPermissions,
-            $viviendasPermissions,
-            $juntasPermissions,
-            $reunionesPermissions,
-            $pagosPermissions,
-            $multasPermissions,
-            $inventariosPermissions,
-            $egresosPermissions,
-            $cambiosTitularPermissions,
-            $reportesPermissions,
-            $documentosPermissions,
+            $categoriasPermissions,
+            $productosPermissions,
+
             [
                 'usuarios.view',
                 'usuarios.create',
@@ -255,19 +139,12 @@ class RolesAndPermissionsSeeder extends Seeder
         $tesorero = Role::create(['name' => 'tesorero']);
         $tesoreroPermissions = array_merge(
             [
-                'empadronados.view',
+                'categorias.view',
                 'personas.view',
-                'viviendas.view',
+
             ],
-            $pagosPermissions,
-            $egresosPermissions,
-            $multasPermissions,
+
             [
-                'inventarios.view',
-                'reportes.financieros',
-                'reportes.morosos',
-                'reportes.egresos',
-                'reportes.export',
                 'config.view',
                 'config.metodos_pago',
                 'config.conceptos_pago',
@@ -281,17 +158,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $secretarioPermissions = array_merge(
             [
                 'personas.view',
-                'empadronados.view',
-                'familiares.view',
-                'viviendas.view',
             ],
-            $reunionesPermissions,
-            $documentosPermissions,
+
+
             [
-                'juntas.view',
-                'reportes.asistencias',
-                'reportes.empadronados',
-                'reportes.export',
                 'config.view',
                 'config.tipos_reunion',
             ]
@@ -302,15 +172,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $vocal = Role::create(['name' => 'vocal']);
         $vocalPermissions = [
             'personas.view',
-            'empadronados.view',
-            'familiares.view',
-            'viviendas.view',
-            'reuniones.view',
-            'reuniones.participaciones',
-            'pagos.view',
-            'inventarios.view',
-            'reportes.general',
-            'documentos.view',
             'config.view',
         ];
         $vocal->givePermissionTo($vocalPermissions);
@@ -322,9 +183,6 @@ class RolesAndPermissionsSeeder extends Seeder
             $configuracionPermissions,
             [
                 'personas.view',
-                'empadronados.view',
-                'reportes.general',
-                'reportes.export',
             ]
         );
         $administrador->givePermissionTo($administradorPermissions);
@@ -335,17 +193,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'personas.view',
             'personas.create',
             'personas.update',
-            'empadronados.view',
-            'empadronados.create',
-            'empadronados.update',
-            'familiares.view',
-            'familiares.create',
-            'familiares.update',
-            'viviendas.view',
-            'viviendas.update',
-            'pagos.view',
-            'pagos.create',
-            'pagos.registrar',
+            'categorias.view',
             'config.view',
         ];
         $operador->givePermissionTo($operadorPermissions);
@@ -354,19 +202,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $contador = Role::create(['name' => 'contador']);
         $contadorPermissions = array_merge(
             [
-                'empadronados.view',
+
                 'personas.view',
-                'viviendas.view',
+
             ],
-            $pagosPermissions,
-            $egresosPermissions,
+
             [
-                'inventarios.view',
-                'reportes.financieros',
-                'reportes.egresos',
-                'reportes.general',
-                'reportes.export',
-                'multas.view',
+                'categorias.view',
                 'config.view',
             ]
         );

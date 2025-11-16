@@ -140,7 +140,7 @@ export default function HeaderTokenTimer() {
       );
 
       if (response.status === 200) {
-        const newToken = response.data.token;
+        const newToken = response.data.data.token;
         const decodedToken = jwtDecode<DecodedToken>(newToken);
         const expirationDate = new Date(decodedToken.exp * 1000);
 

@@ -4,51 +4,25 @@ const Loader3 = () => {
   return (
     <Container className="dark">
       <StyledWrapper>
-        <svg className="pl" width={240} height={240} viewBox="0 0 240 240">
-          <circle
-            className="pl__ring pl__ring--a"
-            cx={120}
-            cy={120}
-            r={105}
-            fill="none"
-            strokeWidth={20}
-            strokeDasharray="0 660"
-            strokeDashoffset={-330}
-            strokeLinecap="round"
-          />
-          <circle
-            className="pl__ring pl__ring--b"
-            cx={120}
-            cy={120}
-            r={35}
-            fill="none"
-            strokeWidth={20}
-            strokeDasharray="0 220"
-            strokeDashoffset={-110}
-            strokeLinecap="round"
-          />
-          <circle
-            className="pl__ring pl__ring--c"
-            cx={85}
-            cy={120}
-            r={70}
-            fill="none"
-            strokeWidth={20}
-            strokeDasharray="0 440"
-            strokeLinecap="round"
-          />
-          <circle
-            className="pl__ring pl__ring--d"
-            cx={155}
-            cy={120}
-            r={70}
-            fill="none"
-            strokeWidth={20}
-            strokeDasharray="0 440"
-            strokeLinecap="round"
-          />
-        </svg>
-        {/* <AnimatedText>Unasam Congresos</AnimatedText> */}
+        <div className="construction-loader">
+          <div className="crane">
+            <div className="crane-base"></div>
+            <div className="crane-mast"></div>
+            <div className="crane-jib"></div>
+            <div className="crane-hook"></div>
+          </div>
+          <div className="buildings">
+            <div className="building building-1"></div>
+            <div className="building building-2"></div>
+            <div className="building building-3"></div>
+          </div>
+          <div className="tools">
+            <div className="hammer"></div>
+            <div className="wrench"></div>
+            <div className="helmet"></div>
+          </div>
+        </div>
+        <LoadingText>Construyendo el futuro...</LoadingText>
       </StyledWrapper>
     </Container>
   );
@@ -66,222 +40,236 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 
-  .pl {
-    width: 6em;
-    height: 6em;
+  .construction-loader {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
   }
 
-  .pl__ring {
-    animation: ringA 2s linear infinite;
+  /* Grúa */
+  .crane {
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+    z-index: 3;
   }
 
-  .pl__ring--a {
-    stroke: #ff7a00;
+  .crane-base {
+    width: 8px;
+    height: 15px;
+    background: #ff7a00;
+    margin: 0 auto;
+    border-radius: 2px 2px 0 0;
   }
 
-  .pl__ring--b {
-    animation-name: ringB;
-    stroke: #007e4a;
+  .crane-mast {
+    width: 4px;
+    height: 80px;
+    background: #ff7a00;
+    margin: 0 auto;
+    animation: craneRotate 4s ease-in-out infinite;
   }
 
-  .pl__ring--c {
-    animation-name: ringC;
-    stroke: #0087c0;
+  .crane-jib {
+    width: 60px;
+    height: 4px;
+    background: #ff7a00;
+    position: absolute;
+    top: -80px;
+    left: 2px;
+    border-radius: 2px;
+    transform-origin: left center;
+    animation: jibMove 3s ease-in-out infinite;
   }
 
-  .pl__ring--d {
-    animation-name: ringD;
-    stroke: #004eae;
+  .crane-hook {
+    width: 2px;
+    height: 20px;
+    background: #666;
+    position: absolute;
+    top: -76px;
+    right: 0;
+    animation: hookMove 2s ease-in-out infinite;
   }
 
-  /* Animaciones de los círculos */
-  @keyframes ringA {
-    from,
-    4% {
-      stroke-dasharray: 0 660;
-      stroke-width: 20;
-      stroke-dashoffset: -330;
-    }
-    12% {
-      stroke-dasharray: 60 600;
-      stroke-width: 30;
-      stroke-dashoffset: -335;
-    }
-    32% {
-      stroke-dasharray: 60 600;
-      stroke-width: 30;
-      stroke-dashoffset: -595;
-    }
-    40%,
-    54% {
-      stroke-dasharray: 0 660;
-      stroke-width: 20;
-      stroke-dashoffset: -660;
-    }
-    62% {
-      stroke-dasharray: 60 600;
-      stroke-width: 30;
-      stroke-dashoffset: -665;
-    }
-    82% {
-      stroke-dasharray: 60 600;
-      stroke-width: 30;
-      stroke-dashoffset: -925;
-    }
-    90%,
-    to {
-      stroke-dasharray: 0 660;
-      stroke-width: 20;
-      stroke-dashoffset: -990;
-    }
+  /* Edificios */
+  .buildings {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 120px;
+    position: absolute;
+    bottom: 0;
+    left: 20px;
   }
 
-  @keyframes ringB {
-    from,
-    12% {
-      stroke-dasharray: 0 220;
-      stroke-width: 20;
-      stroke-dashoffset: -110;
-    }
-    20% {
-      stroke-dasharray: 20 200;
-      stroke-width: 30;
-      stroke-dashoffset: -115;
-    }
-    40% {
-      stroke-dasharray: 20 200;
-      stroke-width: 30;
-      stroke-dashoffset: -195;
-    }
-    48%,
-    62% {
-      stroke-dasharray: 0 220;
-      stroke-width: 20;
-      stroke-dashoffset: -220;
-    }
-    70% {
-      stroke-dasharray: 20 200;
-      stroke-width: 30;
-      stroke-dashoffset: -225;
-    }
-    90% {
-      stroke-dasharray: 20 200;
-      stroke-width: 30;
-      stroke-dashoffset: -305;
-    }
-    98%,
-    to {
-      stroke-dasharray: 0 220;
-      stroke-width: 20;
-      stroke-dashoffset: -330;
-    }
+  .building {
+    background: linear-gradient(to bottom, #007e4a, #0087c0);
+    border-radius: 2px 2px 0 0;
+    position: relative;
   }
 
-  @keyframes ringC {
-    from {
-      stroke-dasharray: 0 440;
-      stroke-width: 20;
-      stroke-dashoffset: 0;
-    }
-    8% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -5;
-    }
-    28% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -175;
-    }
-    36%,
-    58% {
-      stroke-dasharray: 0 440;
-      stroke-width: 20;
-      stroke-dashoffset: -220;
-    }
-    66% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -225;
-    }
-    86% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -395;
-    }
-    94%,
-    to {
-      stroke-dasharray: 0 440;
-      stroke-width: 20;
-      stroke-dashoffset: -440;
-    }
+  .building-1 {
+    width: 20px;
+    height: 40px;
+    animation: buildingGrow1 4s ease-in-out infinite;
   }
 
-  @keyframes ringD {
-    from,
-    8% {
-      stroke-dasharray: 0 440;
-      stroke-width: 20;
-      stroke-dashoffset: 0;
+  .building-2 {
+    width: 25px;
+    height: 60px;
+    animation: buildingGrow2 4s ease-in-out infinite 0.5s;
+  }
+
+  .building-3 {
+    width: 22px;
+    height: 35px;
+    animation: buildingGrow3 4s ease-in-out infinite 1s;
+  }
+
+  /* Herramientas */
+  .tools {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+  }
+
+  .hammer,
+  .wrench,
+  .helmet {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    animation: toolBounce 2s ease-in-out infinite;
+  }
+
+  .hammer {
+    background: #8b4513;
+    animation-delay: 0s;
+  }
+
+  .wrench {
+    background: #c0c0c0;
+    border-radius: 50%;
+    animation-delay: 0.3s;
+  }
+
+  .helmet {
+    background: #ffd700;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation-delay: 0.6s;
+  }
+
+  /* Animaciones */
+  @keyframes craneRotate {
+    0%,
+    100% {
+      transform: rotate(-2deg);
     }
-    16% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -5;
-    }
-    36% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -175;
-    }
-    44%,
     50% {
-      stroke-dasharray: 0 440;
-      stroke-width: 20;
-      stroke-dashoffset: -220;
+      transform: rotate(2deg);
     }
-    58% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -225;
+  }
+
+  @keyframes jibMove {
+    0%,
+    100% {
+      transform: rotate(-5deg);
     }
-    78% {
-      stroke-dasharray: 40 400;
-      stroke-width: 30;
-      stroke-dashoffset: -395;
+    50% {
+      transform: rotate(5deg);
     }
-    86%,
-    to {
-      stroke-dasharray: 0 440;
-      stroke-width: 20;
-      stroke-dashoffset: -440;
+  }
+
+  @keyframes hookMove {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes buildingGrow1 {
+    0% {
+      height: 20px;
+    }
+    50% {
+      height: 45px;
+    }
+    100% {
+      height: 40px;
+    }
+  }
+
+  @keyframes buildingGrow2 {
+    0% {
+      height: 30px;
+    }
+    50% {
+      height: 65px;
+    }
+    100% {
+      height: 60px;
+    }
+  }
+
+  @keyframes buildingGrow3 {
+    0% {
+      height: 15px;
+    }
+    50% {
+      height: 40px;
+    }
+    100% {
+      height: 35px;
+    }
+  }
+
+  @keyframes toolBounce {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-5px) rotate(5deg);
+    }
+    50% {
+      transform: translateY(-2px) rotate(-3deg);
+    }
+    75% {
+      transform: translateY(-8px) rotate(2deg);
     }
   }
 `;
 
-// const gradientAnimation = keyframes`
-//   0% {
-//     background-position: 0% 50%;
-//   }
-//   50% {
-//     background-position: 100% 50%;
-//   }
-//   100% {
-//     background-position: 0% 50%;
-//   }
-// `;
+const LoadingText = styled.h2`
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  color: #ff7a00;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 600;
+  animation: textPulse 2s ease-in-out infinite;
 
-// const AnimatedText = styled.h1`
-//   font-family: 'Montserrat', sans-serif;
-//   font-size: clamp(1.5rem, 4vw, 3rem);
-//   text-align: center;
-//   margin-top: 20px;
-//   background: linear-gradient(270deg, #ff7a00, #007e4a, #0087c0, #004eae);
-//   background-size: 400% 400%;
-//   -webkit-background-clip: text;
-//   -webkit-text-fill-color: transparent;
-// //   animation: ${gradientAnimation} 5s ease infinite;
-// `;
+  @keyframes textPulse {
+    0%,
+    100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+`;
 
 export default Loader3;

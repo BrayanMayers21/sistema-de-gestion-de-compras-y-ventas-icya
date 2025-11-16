@@ -177,8 +177,8 @@ export const datosOpciones: MenuData = {
     items: {
       documentos: {
         permiso: "usuarios.view",
-        title: "Documentos",
-        url: "/documentos",
+        title: "Orden de Compra-Servicio",
+        url: "/orden",
         icon: FileText,
         clase: "",
       },
@@ -227,6 +227,30 @@ export const datosOpciones: MenuData = {
         title: "Calendario",
         url: "/calendario",
         icon: CalendarDays,
+        clase: "",
+      },
+    },
+  },
+  grupo7: {
+    titulo: "Cotizaciones",
+    items: {
+      cotizacion: {
+        permiso: "usuarios.view",
+        title: "Cotizaciones",
+        url: "/cotizaciones",
+        icon: BarChart4,
+        clase: "",
+      },
+    },
+  },
+  grupo87: {
+    titulo: "Cotizaciones para Antamina",
+    items: {
+      cotizacion: {
+        permiso: "usuarios.view",
+        title: "Antamina",
+        url: "/cotizaciones-antamina",
+        icon: BarChart4,
         clase: "",
       },
     },

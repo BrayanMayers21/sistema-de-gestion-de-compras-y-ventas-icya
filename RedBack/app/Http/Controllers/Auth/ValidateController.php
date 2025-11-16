@@ -185,7 +185,10 @@ class ValidateController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Token renovado correctamente.',
-                'token'   => $newToken,
+                'data' => [
+                    'token' => $newToken,
+                    'message' => 'Token renovado correctamente.'
+                ]
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([

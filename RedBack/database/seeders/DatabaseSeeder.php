@@ -18,14 +18,14 @@ class DatabaseSeeder extends Seeder
             PersonasTableSeeder::class,
             RolesAndPermissionsSeeder::class,
             UsuariosTableSeeder::class,
-            IntalacionTableSeeder::class
+            IntalacionTableSeeder::class,
+
+            CodigosContablesTableSeeder::class,
+            ObrasTableSeeder::class,
+            ObrasCodigoSeeder::class,
+            CategoriasSeeder::class,
+            ProductosSeeder::class,
+            TipoOrdenSeeder::class,
         ]);
-
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

@@ -3,6 +3,10 @@ import { Suspense, lazy } from "react";
 import ScrollToTop from "./components/ui/ScrollTop";
 import Loader3 from "./assets/Components/Loaders/Loader3";
 import { ProtectedRoute } from "./assets/Auth/ProtectedRoute";
+import HomeOrden from "./assets/Pages/Orden/page";
+import HomeRequerimiento from "./assets/Components/Requerimientos/page";
+import HomeProducto from "./assets/Pages/Productos/page";
+import HomeCotizacionAntamina from "./assets/Pages/cotizacion_antamina/page";
 
 // Lazy imports
 const LoginPage = lazy(() =>
@@ -16,6 +20,7 @@ const Error403 = lazy(() => import("./assets/Pages/Error/403"));
 const Page = lazy(() => import("./assets/Components/Prueba"));
 const Redvel = lazy(() => import("./assets/Pages/Redvel/RedvelPage"));
 const PageUsuarios = lazy(() => import("./assets/Pages/Users/PageUsuarios"));
+const HomeCategorias = lazy(() => import("./assets/Pages/Categoria/pageCate"));
 const DashboardLayout = lazy(
   () => import("./assets/Components/Dashboard/DashboardLayout")
 );
@@ -53,6 +58,16 @@ function App() {
             }
           >
             <Route path="/dashboard" element={<Loader3 />} />
+
+            <Route path="/categorias" element={<HomeCategorias />} />
+            <Route path="/orden" element={<HomeOrden />} />
+            <Route path="/cotizaciones" element={<HomeRequerimiento />} />
+            <Route path="/productos" element={<HomeProducto />} />
+            <Route
+              path="/cotizaciones-antamina"
+              element={<HomeCotizacionAntamina />}
+            />
+
             <Route path="/inicio" element={<Dashboar_Stats />} />
             <Route path="/prueba" element={<Page />} />
             <Route

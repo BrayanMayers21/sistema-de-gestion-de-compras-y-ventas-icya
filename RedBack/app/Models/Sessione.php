@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Sessione
- *
- * @property string $id_sesiones
+ * 
+ * @property int $id_sesiones
  * @property string $ip_address
  * @property Carbon $fecha_hora_secion
  * @property int $fk_idusuarios
@@ -21,19 +21,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sessione extends Model
 {
-    protected $table = 'sessiones';
-    protected $primaryKey = 'id_sesiones';
-    public $incrementing = true;
-    public $timestamps = false;
+	protected $connection = 'mysql';
+	protected $table = 'sessiones';
+	protected $primaryKey = 'id_sesiones';
+	public $timestamps = false;
 
-    protected $casts = [
-        'fecha_hora_secion' => 'datetime',
-        'fk_idusuarios' => 'int'
-    ];
+	protected $casts = [
+		'fecha_hora_secion' => 'datetime',
+		'fk_idusuarios' => 'int'
+	];
 
-    protected $fillable = [
-        'ip_address',
-        'fecha_hora_secion',
-        'fk_idusuarios'
-    ];
+	protected $fillable = [
+		'ip_address',
+		'fecha_hora_secion',
+		'fk_idusuarios'
+	];
 }
