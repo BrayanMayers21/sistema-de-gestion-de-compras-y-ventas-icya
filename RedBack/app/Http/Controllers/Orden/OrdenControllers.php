@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Orden;
 
 use App\Http\Controllers\Controller;
 use App\Models\Archivo;
+use App\Models\Obra;
 use App\Models\OrdenDetalle;
 use App\Models\OrdenesCompra;
 use App\Models\TipoOrden;
@@ -34,15 +35,8 @@ class OrdenControllers extends Controller
             // Base de la consulta (equivalente a tu SQL)
             $q = DB::table('ordenes_compra as oc')
                 ->join('tipo_orden as t', 't.idtipo_orden', '=', 'oc.fk_idtipo_orden')
-                ->join('codigos_contables as cc', 'cc.idcodigos_contables', '=', 'oc.fk_idcodigos_contables')
-                ->join('obras_codigos as obc', 'obc.fk_idcodigos_contables', '=', 'cc.idcodigos_contables')
-                ->join('obras as o', 'o.idobras', '=', 'obc.fk_idobras')
+                ->join('obras as o', 'o.idobras', '=', 'oc.fk_idobras')
                 ->join('proveedores as p', 'p.id_proveedor', '=', 'oc.fk_id_proveedor')
-                // Evita duplicados: sólo órdenes que tienen detalles
-                ->whereExists(function ($qq) {
-                    $qq->from('orden_detalle as od')
-                        ->whereColumn('od.fk_id_orden', 'oc.id_orden');
-                })
                 ->select(
                     'oc.id_orden',
                     'oc.numero_orden',
@@ -63,6 +57,7 @@ class OrdenControllers extends Controller
                     't.nom_orden as tipo_orden'
                 )
                 ->orderBy('oc.id_orden', 'desc');
+            // ->get(); // Descomenta esto si quieres obtener los resultados aquí mismo
 
             // Filtro de búsqueda
             if (!empty($validated['Buscar'])) {
@@ -108,7 +103,7 @@ class OrdenControllers extends Controller
                     $documentosRequeridos = ['acta de contrato', 'reporte servicio', 'factura'];
                 } else {
                     // Por defecto para cualquier otro tipo
-                    $documentosRequeridos = ['cotizacion', 'factura'];
+                    $documentosRequeridos = ['cotizacion', 'factura', 'guia'];
                 }
 
                 // Calcular documentos presentes y faltantes
@@ -153,9 +148,7 @@ class OrdenControllers extends Controller
                 ->join('tipo_orden as t', 't.idtipo_orden', '=', 'oc.fk_idtipo_orden')
                 ->join('orden_detalle as od', 'od.fk_id_orden', '=', 'oc.id_orden')
                 ->join('productos as pro', 'pro.id_producto', '=', 'od.fk_id_producto')
-                ->join('codigos_contables as cc', 'cc.idcodigos_contables', '=', 'oc.fk_idcodigos_contables')
-                ->join('obras_codigos as obc', 'obc.fk_idcodigos_contables', '=', 'cc.idcodigos_contables')
-                ->join('obras as o', 'o.idobras', '=', 'obc.fk_idobras')
+                ->join('obras as o', 'o.idobras', '=', 'oc.fk_idobras')
                 ->join('proveedores as p', 'p.id_proveedor', '=', 'oc.fk_id_proveedor')
                 ->select(
                     'oc.id_orden',
@@ -173,8 +166,6 @@ class OrdenControllers extends Controller
                     'oc.igv',
                     'oc.adelanto',
                     'oc.total',
-                    'cc.codigo_contable',
-                    'cc.nombre_contable',
                     'od.id_detalle',
                     'od.cantidad',
                     'od.precio_unitario',
@@ -210,13 +201,13 @@ class OrdenControllers extends Controller
             'fecha_emision' => 'required|date',
             'fecha_entrega' => 'required|date',
             'lugar_entrega' => 'required|string',
-            'estado' => 'required|in:servicio,reporte,factura',
+            'estado' => 'required|in:pendiente,pagado,rechazado',
             'subtotal' => 'required|numeric',
             'igv' => 'required|numeric',
             'adelanto' => 'required|numeric',
             'total' => 'required|numeric',
             'observaciones' => 'nullable|string',
-            'fk_idcodigos_contables' => 'required|integer',
+            'fk_idobras' => 'required|integer',
             'fk_idtipo_orden' => 'required|integer',
             'fk_id_proveedor' => 'required|integer',
 
@@ -280,7 +271,7 @@ class OrdenControllers extends Controller
                 'total' => $request->total,
                 'observaciones' => $request->observaciones,
                 'usuario_registro' => Auth::user()->nomusu ?? 'Sistema',
-                'fk_idcodigos_contables' => $request->fk_idcodigos_contables,
+                'fk_idobras' => $request->fk_idobras,
                 'fk_idtipo_orden' => $request->fk_idtipo_orden,
                 'fk_id_proveedor' => $request->fk_id_proveedor,
             ]);
@@ -361,7 +352,7 @@ class OrdenControllers extends Controller
             'total' => 'sometimes|required|numeric',
             'observaciones' => 'nullable|string',
             'usuario_registro' => 'sometimes|required|string|max:100',
-            'fk_idcodigos_contables' => 'sometimes|required|integer',
+            'fk_idobras' => 'sometimes|required|integer',
             'fk_idtipo_orden' => 'sometimes|required|integer',
             'fk_id_proveedor' => 'sometimes|required|integer',
 
@@ -393,10 +384,10 @@ class OrdenControllers extends Controller
                 'estado',
                 'subtotal',
                 'igv',
+                'adelanto',
                 'total',
                 'observaciones',
-                'usuario_registro',
-                'fk_idcodigos_contables',
+                'fk_idobras',
                 'fk_idtipo_orden',
                 'fk_id_proveedor'
             ]));
@@ -600,20 +591,7 @@ class OrdenControllers extends Controller
     public function listarCodigosContables()
     {
         try {
-            // $codigos = DB::table('codigos_contables')
-            //     ->select('idcodigos_contables', 'codigo_contable', 'nombre_contable')
-            //     ->orderBy('codigo_contable')
-            //     ->get();
-
-
-            $codigos =  DB::table('codigos_contables as c')
-                ->join('obras_codigos as oc', 'oc.fk_idcodigos_contables', '=', 'c.idcodigos_contables')
-                ->join('obras as o', 'o.idobras', '=', 'oc.fk_idobras')
-                ->selectRaw('MIN(c.idcodigos_contables) AS idcodigos_contables, o.codigo, o.nom_obra')
-                ->groupBy('o.codigo', 'o.nom_obra')
-                ->orderBy('o.codigo')
-                ->get();
-
+            $codigos = Obra::all();
             return response()->json([
                 'message' => 'Códigos contables obtenidos correctamente.',
                 'data' => $codigos,
@@ -731,16 +709,12 @@ class OrdenControllers extends Controller
             // Obtener la orden con todas sus relaciones
             $orden = DB::table('ordenes_compra as oc')
                 ->join('tipo_orden as t', 't.idtipo_orden', '=', 'oc.fk_idtipo_orden')
-                ->join('codigos_contables as cc', 'cc.idcodigos_contables', '=', 'oc.fk_idcodigos_contables')
-                ->join('obras_codigos as obc', 'obc.fk_idcodigos_contables', '=', 'cc.idcodigos_contables')
-                ->join('obras as o', 'o.idobras', '=', 'obc.fk_idobras')
+                ->join('obras as o', 'o.idobras', '=', 'oc.fk_idobras')
                 ->join('proveedores as p', 'p.id_proveedor', '=', 'oc.fk_id_proveedor')
                 ->where('oc.id_orden', $id)
                 ->select(
                     'oc.*',
                     't.nom_orden as tipo_orden',
-                    'cc.codigo_contable',
-                    'cc.nombre_contable',
                     'o.codigo as codigo_obra',
                     'o.nom_obra',
                     'p.ruc as proveedor_ruc',

@@ -328,36 +328,6 @@ export function OrdenDetails({ isOpen, onClose, ordenId }: OrdenDetailsProps) {
                 </CardContent>
               </Card>
 
-              {/* Código Contable */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    Código Contable
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">
-                      Código Contable
-                    </label>
-                    <p className="font-mono font-medium">
-                      {orden.codigo_contable.codigo_contable}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">
-                      Nombre Contable
-                    </label>
-                    <p>
-                      {orden.codigo_contable.nombre_contable ||
-                        "No especificado"}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Información de la Obra */}
               <Card>
                 <CardHeader>

@@ -58,13 +58,21 @@ class CategoriasSeeder extends Seeder
             ['nombre' => 'Prefabricados de Concreto', 'descripcion' => 'Viguetas, placas, muros y elementos prefabricados.', 'estado' => 'Activo', 'fecha_registro' => $now],
             ['nombre' => 'Adoquines y Pavimentos Exteriores', 'descripcion' => 'Adoquines, losetas, bordillos, drenes para exteriores.', 'estado' => 'Activo', 'fecha_registro' => $now],
             ['nombre' => 'Cercos y Alambrados', 'descripcion' => 'Malla olímpica, alambre de púas, concertina, postes.', 'estado' => 'Activo', 'fecha_registro' => $now],
+            
             ['nombre' => 'Señalización y Control de Obra', 'descripcion' => 'Conos, mallas, cintas, letreros y barreras.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Andamios y Escaleras', 'descripcion' => 'Andamios multidireccionales, marcos, escaleras y piezas.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Herramientas Manuales', 'descripcion' => 'Llaves, martillos, palas, cinceles, niveles y más.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Herramientas Eléctricas', 'descripcion' => 'Taladros, esmeriles, rotomartillos, demoledoras.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Equipos y Maquinaria Ligera', 'descripcion' => 'Mezcladoras, compactadoras, vibradores, cortadoras.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Limpieza y Mantenimiento de Obra', 'descripcion' => 'Detergentes, desinfectantes, escobas, recogedores.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Químicos para Construcción', 'descripcion' => 'Epóxicos, curadores, desmoldantes, limpiadores.', 'estado' => 'Activo', 'fecha_registro' => $now],
+
             ['nombre' => 'Seguridad Industrial (EPP)', 'descripcion' => 'Cascos, guantes, botas, arneses, respiradores, chalecos.', 'estado' => 'Activo', 'fecha_registro' => $now],
         ];
 

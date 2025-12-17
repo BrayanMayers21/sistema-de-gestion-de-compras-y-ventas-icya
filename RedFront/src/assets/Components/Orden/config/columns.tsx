@@ -12,18 +12,6 @@ export const ordenesColumns: ColumnDefinition<OrdenCompraItem>[] = [
     key: "numero_orden",
     label: "Número de Orden",
   },
-  // {
-  //   key: "fecha_emision",
-  //   label: "Fecha de Emisión",
-  // },
-  // {
-  //   key: "fecha_entrega",
-  //   label: "Fecha de Entrega",
-  // },
-  // {
-  //   key: "lugar_entrega",
-  //   label: "Lugar de Entrega",
-  // },
   {
     key: "codigo",
     label: "Código",
@@ -33,15 +21,7 @@ export const ordenesColumns: ColumnDefinition<OrdenCompraItem>[] = [
       </div>
     ),
   },
-  // {
-  //   key: "nom_obra",
-  //   label: "Nombre de la Obra",
-  //   render: (value: unknown) => (
-  //     <div className="max-w-[180px] truncate" title={String(value)}>
-  //       {String(value)}
-  //     </div>
-  //   ),
-  // },
+  
   {
     key: "estado",
     label: "Estado",
@@ -49,12 +29,12 @@ export const ordenesColumns: ColumnDefinition<OrdenCompraItem>[] = [
       const estado = String(value).toLowerCase();
       let colorClass = "";
 
-      if (estado === "factura") {
+      if (estado === "pagado") {
         colorClass = "text-green-600 bg-green-200";
-      } else if (estado === "reporte" || estado === "servicio") {
+      } else if (estado === "rechazado") {
         colorClass = "text-red-600 bg-red-100";
       } else {
-        colorClass = "text-red-600 bg-red-100";
+        colorClass = "text-yellow-600 bg-yellow-100";
       }
 
       return (

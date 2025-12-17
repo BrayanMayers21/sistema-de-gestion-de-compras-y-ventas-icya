@@ -82,7 +82,7 @@ const ordenCompraSchema = z.object({
     .string()
     .min(1, "El lugar de entrega es obligatorio")
     .max(255, "Máximo 255 caracteres"),
-  estado: z.enum(["servicio", "reporte", "factura"], {
+  estado: z.enum(["pendiente", "pagado", "rechazado"], {
     errorMap: () => ({ message: "Seleccione un estado válido" }),
   }),
   subtotal: z.number().min(0, "El subtotal debe ser mayor o igual a 0"),
@@ -91,9 +91,7 @@ const ordenCompraSchema = z.object({
   total: z.number().min(0, "El total debe ser mayor o igual a 0"),
   incluir_igv: z.boolean(),
   observaciones: z.string().max(500, "Máximo 500 caracteres").optional(),
-  fk_idcodigos_contables: z
-    .number()
-    .min(1, "Debe seleccionar un código contable"),
+  fk_idobras: z.number().min(1, "Debe seleccionar una obra"),
   fk_idtipo_orden: z.number().min(1, "Debe seleccionar un tipo de orden"),
   fk_id_proveedor: z.number().min(1, "Debe seleccionar un proveedor"),
   detalles: z
@@ -136,14 +134,14 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
       fecha_emision: new Date().toISOString().split("T")[0],
       fecha_entrega: new Date().toISOString().split("T")[0],
       lugar_entrega: "Huaraz",
-      estado: "servicio" as const,
+      estado: "pendiente" as const,
       subtotal: 0,
       igv: 0,
       adelanto: 0,
       total: 0,
       incluir_igv: false,
       observaciones: "",
-      fk_idcodigos_contables: 0,
+      fk_idobras: 0,
       fk_idtipo_orden: 0,
       fk_id_proveedor: 0,
       detalles: [
@@ -281,14 +279,14 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
         fecha_emision: new Date().toISOString().split("T")[0],
         fecha_entrega: new Date().toISOString().split("T")[0],
         lugar_entrega: "Huaraz",
-        estado: "servicio",
+        estado: "pendiente" as const,
         subtotal: 0,
         igv: 0,
         adelanto: 0,
         total: 0,
         incluir_igv: false,
         observaciones: "",
-        fk_idcodigos_contables: 0,
+        fk_idobras: 0,
         fk_idtipo_orden: 0,
         fk_id_proveedor: 0,
         detalles: [
@@ -461,9 +459,9 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="servicio">Servicio</SelectItem>
-                            <SelectItem value="reporte">Reporte</SelectItem>
-                            <SelectItem value="factura">Factura</SelectItem>
+                            <SelectItem value="pendiente">Pendiente</SelectItem>
+                            <SelectItem value="pagado">Pagado</SelectItem>
+                            <SelectItem value="rechazado">Rechazado</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -622,7 +620,7 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
 
                   <FormField
                     control={form.control}
-                    name="fk_idcodigos_contables"
+                    name="fk_idobras"
                     render={({ field }) => {
                       const [searchCodigo, setSearchCodigo] = useState("");
 
@@ -641,12 +639,12 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
 
                       // Obtener el código y nombre de obra seleccionado
                       const codigoSeleccionado = codigosContables.find(
-                        (c) => c.idcodigos_contables === field.value
+                        (c) => c.idobras === field.value
                       );
 
                       return (
                         <FormItem>
-                          <FormLabel>Código Contable *</FormLabel>
+                          <FormLabel>Obra *</FormLabel>
                           <Select
                             onValueChange={(value) =>
                               field.onChange(Number(value))
@@ -691,8 +689,8 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
                                 {codigosFiltrados.length > 0 ? (
                                   codigosFiltrados.map((codigo) => (
                                     <SelectItem
-                                      key={codigo.idcodigos_contables}
-                                      value={codigo.idcodigos_contables.toString()}
+                                      key={codigo.idobras}
+                                      value={codigo.idobras.toString()}
                                       className="cursor-pointer"
                                     >
                                       <div className="flex flex-col w-full min-w-0">
@@ -707,7 +705,7 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
                                   ))
                                 ) : (
                                   <div className="p-4 text-center text-sm text-gray-500">
-                                    No se encontraron códigos contables
+                                    No se encontraron Obras
                                   </div>
                                 )}
                               </div>
@@ -933,76 +931,103 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
                     Agregar Archivo
                   </Button>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent>
                   {archivosAdjuntos.length === 0 ? (
-                    <p className="text-sm text-gray-500 text-center py-4">
-                      No hay archivos adjuntos. Puede agregar cotizaciones,
-                      facturas, guías, etc.
-                    </p>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center ">
+                      <FileText className="w-12 h-12 mx-auto text-gray-400 mb-3" />
+                      <p className="text-sm text-gray-600 font-medium mb-1">
+                        No hay archivos adjuntos
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Puede agregar cotizaciones, facturas, guías, reportes de
+                        servicio, etc.
+                      </p>
+                    </div>
                   ) : (
-                    archivosAdjuntos.map((archivo, index) => (
-                      <Card
-                        key={index}
-                        className="p-4 border-l-4 border-l-green-500"
-                      >
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                          <div>
-                            <Label htmlFor={`archivo-${index}`}>
-                              Archivo * (PDF, JPG, PNG - Máx 2MB)
-                            </Label>
-                            <Input
-                              id={`archivo-${index}`}
-                              type="file"
-                              accept=".pdf,.jpg,.jpeg,.png"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0] || null;
-                                handleFileChange(index, file);
-                              }}
-                              className="mt-2"
-                            />
-                            {archivo.archivo && (
-                              <p className="text-xs text-gray-600 mt-1">
-                                📄 {archivo.archivo.name} (
-                                {(archivo.archivo.size / 1024).toFixed(2)} KB)
-                              </p>
-                            )}
-                          </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {archivosAdjuntos.map((archivo, index) => (
+                        <Card
+                          key={index}
+                          className="p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative"
+                        >
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => eliminarArchivo(index)}
+                            className="absolute top-2 right-2 h-7 w-7"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
 
-                          <div>
-                            <Label htmlFor={`tipo-${index}`}>
-                              Tipo de Archivo *
-                            </Label>
-                            <Select
-                              value={archivo.tipo_archivo}
-                              onValueChange={(value) =>
-                                handleTipoArchivoChange(index, value)
-                              }
-                            >
-                              <SelectTrigger
-                                id={`tipo-${index}`}
-                                className="mt-2"
+                          <div className="space-y-3 mt-2">
+                            <div>
+                              <Label
+                                htmlFor={`archivo-${index}`}
+                                className="text-xs"
                               >
-                                <SelectValue placeholder="Seleccione el tipo" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="cotizacion">
-                                  Cotización
-                                </SelectItem>
-                                <SelectItem value="factura">Factura</SelectItem>
-                                <SelectItem value="guia">Guía</SelectItem>
-                                <SelectItem value="reporte servicio">
-                                  Reporte de Servicio
-                                </SelectItem>
-                                <SelectItem value="acta de contrato">
-                                  Acta de Contrato
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
+                                Archivo * (PDF, JPG, PNG - Máx 2MB)
+                              </Label>
+                              <Input
+                                id={`archivo-${index}`}
+                                type="file"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0] || null;
+                                  handleFileChange(index, file);
+                                }}
+                                className="mt-1"
+                              />
+                              {archivo.archivo && (
+                                <p className="text-xs text-gray-600 mt-1 truncate">
+                                  📄 {archivo.archivo.name} (
+                                  {(archivo.archivo.size / 1024).toFixed(2)} KB)
+                                </p>
+                              )}
+                            </div>
 
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1">
-                              <Label htmlFor={`fecha-${index}`}>
+                            <div>
+                              <Label
+                                htmlFor={`tipo-${index}`}
+                                className="text-xs"
+                              >
+                                Tipo de Archivo *
+                              </Label>
+                              <Select
+                                value={archivo.tipo_archivo}
+                                onValueChange={(value) =>
+                                  handleTipoArchivoChange(index, value)
+                                }
+                              >
+                                <SelectTrigger
+                                  id={`tipo-${index}`}
+                                  className="mt-1"
+                                >
+                                  <SelectValue placeholder="Seleccione el tipo" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="cotizacion">
+                                    Cotización
+                                  </SelectItem>
+                                  <SelectItem value="factura">
+                                    Factura
+                                  </SelectItem>
+                                  <SelectItem value="guia">Guía</SelectItem>
+                                  <SelectItem value="reporte servicio">
+                                    Reporte de Servicio
+                                  </SelectItem>
+                                  <SelectItem value="acta de contrato">
+                                    Acta de Contrato
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <Label
+                                htmlFor={`fecha-${index}`}
+                                className="text-xs"
+                              >
                                 Fecha del Archivo
                               </Label>
                               <Input
@@ -1015,22 +1040,13 @@ export function OrdenForm({ isOpen, onClose, onSubmit, mode }: OrdenFormProps) {
                                     e.target.value
                                   )
                                 }
-                                className="mt-2"
+                                className="mt-1"
                               />
                             </div>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="icon"
-                              onClick={() => eliminarArchivo(index)}
-                              className="mt-7"
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
                           </div>
-                        </div>
-                      </Card>
-                    ))
+                        </Card>
+                      ))}
+                    </div>
                   )}
                 </CardContent>
               </Card>

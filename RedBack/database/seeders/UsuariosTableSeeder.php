@@ -61,15 +61,16 @@ class UsuariosTableSeeder extends Seeder
         $user = Usuario::find(4);
         $user->assignRole('secretario');
         $user = Usuario::find(5);
-        $user->assignRole('vocal');
+        $user->assignRole('administrador');
 
-        // presidente
-        // superadmin
-        // tesorero
-        // secretario
-        // vocal
-        // administrador
-        // operador
-        // contador
+        // Roles disponibles:
+        // - superadmin
+        // - presidente
+        // - tesorero
+        // - secretario
+        // - vocal
+        // - administrador
+        // - operador
+        // - contador
     }
 }

@@ -14,55 +14,31 @@ class ObrasCodigoSeeder extends Seeder
      */
     public function run(): void
     {
-        $today = Carbon::today()->toDateString();
+        // Definimos los IDs de las Obras (1 al 5 según tus datos)
+        $obrasIds = [1, 2, 3, 4, 5];
 
-        // Mapea obra_id => prefijo de codigo_contable
-        $map = [
-            1 => '0101',
-            2 => '0102',
-            3 => '0103',
-            4 => '0104',
-            5 => '0105',
-        ];
+        // Definimos los IDs de los Códigos Contables (1 al 15 según tus datos)
+        $codigosIds = range(1, 15); // Esto crea un array [1, 2, ..., 15]
 
-        DB::transaction(function () use ($map, $today) {
-            foreach ($map as $obraId => $prefijo) {
-                // Verifica que exista la obra
-                $obraExists = DB::table('obras')->where('idobras', $obraId)->exists();
-                if (!$obraExists) {
-                    // Si falta la obra, salta este grupo (o lanza excepción si prefieres)
-                    continue;
-                }
+        $data = [];
 
-                // IDs de codigos_contables que coinciden con el prefijo (exactamente 6 dígitos: 0101__)
-                $contableIds = DB::table('codigos_contables')
-                    ->where('codigo_contable', 'like', $prefijo . '__')
-                    ->pluck('idcodigos_contables')
-                    ->all();
+        // Fecha fija según tus datos (o puedes usar Carbon::now() para la fecha actual)
+        $fechaRegistro = '2025-11-22';
 
-                if (empty($contableIds)) {
-                    continue;
-                }
-
-                // Evita duplicados sin necesidad de índice único:
-                $yaVinculados = DB::table('obras_codigos')
-                    ->where('fk_idobras', $obraId)
-                    ->whereIn('fk_idcodigos_contables', $contableIds)
-                    ->pluck('fk_idcodigos_contables')
-                    ->all();
-
-                $faltantes = array_values(array_diff($contableIds, $yaVinculados));
-
-                if (!empty($faltantes)) {
-                    $rows = array_map(fn($cid) => [
-                        'fecha_registro' => $today,
-                        'fk_idcodigos_contables' => $cid,
-                        'fk_idobras' => $obraId,
-                    ], $faltantes);
-
-                    DB::table('obras_codigos')->insert($rows);
-                }
+        // Creamos la combinación de TODAS las obras con TODOS los códigos
+        foreach ($obrasIds as $idObra) {
+            foreach ($codigosIds as $idCodigo) {
+                $data[] = [
+                    'fecha_registro'         => $fechaRegistro,
+                    'fk_idcodigos_contables' => $idCodigo,
+                    'fk_idobras'             => $idObra,
+                    // Si tienes timestamps (created_at/updated_at) descomenta la línea de abajo:
+                    // 'created_at' => Carbon::now(), 'updated_at' => Carbon::now(),
+                ];
             }
-        });
+        }
+
+        // Insertamos los datos en lotes (batch insert) para mayor velocidad
+        DB::table('obras_codigos')->insert($data);
     }
 }

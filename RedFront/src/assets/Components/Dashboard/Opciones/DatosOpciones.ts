@@ -13,6 +13,7 @@ import {
   FileText,
   ShieldCheck,
   Users,
+  ClipboardCheck,
 } from "lucide-react";
 
 export interface MenuItem {
@@ -82,11 +83,11 @@ export const datosOpciones: MenuData = {
     },
   },
   grupo2: {
-    titulo: "Configuraciones",
+    titulo: "Usuarios",
     items: {
       settings: {
         permiso: "usuarios.view",
-        title: "Configuración",
+        title: "Usuarios",
         url: "/usuarios/lista",
         icon: Settings2,
         isActive: false,
@@ -106,9 +107,9 @@ export const datosOpciones: MenuData = {
         items: [
           {
             id: 1,
-            name: "Design Engineering",
-            title: "Design Engineering",
-            url: "/psrueba",
+            name: "Oficina",
+            title: "OFICINA",
+            url: "/oficina-empleados",
             icon: Frame,
             permiso: "usuarios.view",
             clase: "",
@@ -132,6 +133,13 @@ export const datosOpciones: MenuData = {
             clase: "",
           },
         ],
+      },
+      asistencias: {
+        permiso: "usuarios.view",
+        title: "Asistencias",
+        url: "/asistencias",
+        icon: ClipboardCheck,
+        clase: "",
       },
       roles: {
         permiso: "usuarios.view",
@@ -197,7 +205,7 @@ export const datosOpciones: MenuData = {
     items: {
       productos: {
         permiso: "usuarios.view",
-        title: "Productos",
+        title: "Materiales de Obra",
         url: "/productos",
         icon: PackageSearch,
         clase: "",
@@ -206,6 +214,13 @@ export const datosOpciones: MenuData = {
         permiso: "usuarios.view",
         title: "Categorías",
         url: "/categorias",
+        icon: Layers,
+        clase: "",
+      },
+      OBRAS11: {
+        permiso: "usuarios.view",
+        title: "Obras",
+        url: "/obras",
         icon: Layers,
         clase: "",
       },

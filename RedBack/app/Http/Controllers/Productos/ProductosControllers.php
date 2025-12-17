@@ -87,7 +87,7 @@ class ProductosControllers extends Controller
                 )
                 ->where('p.id_producto', '=', $id)
                 ->first();
-                
+
             if (!$producto) {
                 return response()->json([
                     'error' => 'Producto no encontrado.',
@@ -161,7 +161,7 @@ class ProductosControllers extends Controller
 
             // Actualizar el producto
             $updated = DB::table('productos')
-                ->where('id_producto', '=',$id)
+                ->where('id_producto', '=', $id)
                 ->update([
                     'nombre'          => $validated['nombre'],
                     'descripcion'     => $validated['descripcion'] ?? null,

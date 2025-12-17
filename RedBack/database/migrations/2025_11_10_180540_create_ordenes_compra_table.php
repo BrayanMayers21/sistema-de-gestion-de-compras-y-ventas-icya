@@ -17,13 +17,13 @@ return new class extends Migration
             $table->date('fecha_emision')->index('idx_fecha_emision');
             $table->date('fecha_entrega')->nullable();
             $table->text('lugar_entrega')->nullable();
-            $table->enum('estado', ['factura', 'reporte', 'servicio'])->index('idx_estado');
+            $table->enum('estado', ['pendiente', 'pagado', 'rechazado'])->index('idx_estado');
             $table->decimal('subtotal', 12)->default(0);
             $table->decimal('igv', 12)->default(0);
             $table->decimal('adelanto', 12)->default(0);
             $table->decimal('total', 12)->default(0);
             $table->text('observaciones')->nullable();
-            $table->integer('fk_idcodigos_contables')->index('fk_codigos_contables1_idx');
+            $table->integer('fk_idobras')->index('fk_obras1_idx');
             $table->integer('fk_idtipo_orden')->index('fk_tipo_orden1_idx');
             $table->integer('fk_id_proveedor')->index('fk_proveedores1_idx');
 

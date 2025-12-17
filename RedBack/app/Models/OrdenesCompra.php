@@ -23,11 +23,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $igv
  * @property float $total
  * @property string|null $observaciones
- * @property int $fk_idcodigos_contables
+ * @property int $fk_idobras
  * @property int $fk_idtipo_orden
  * @property int $fk_id_proveedor
  * 
- * @property CodigosContable $codigos_contable
+ * @property Obra $obra
  * @property Proveedore $proveedore
  * @property TipoOrden $tipo_orden
  * @property Collection|OrdenDetalle[] $orden_detalles
@@ -50,7 +50,7 @@ class OrdenesCompra extends Model
 		'igv' => 'float',
 		'adelanto' => 'float',
 		'total' => 'float',
-		'fk_idcodigos_contables' => 'int',
+		'fk_idobras' => 'int',
 		'fk_idtipo_orden' => 'int',
 		'fk_id_proveedor' => 'int'
 	];
@@ -66,14 +66,14 @@ class OrdenesCompra extends Model
 		'adelanto',
 		'total',
 		'observaciones',
-		'fk_idcodigos_contables',
+		'fk_idobras',
 		'fk_idtipo_orden',
 		'fk_id_proveedor'
 	];
 
-	public function codigos_contable()
+	public function obra()
 	{
-		return $this->belongsTo(CodigosContable::class, 'fk_idcodigos_contables');
+		return $this->belongsTo(Obra::class, 'fk_idobras');
 	}
 
 	public function proveedore()

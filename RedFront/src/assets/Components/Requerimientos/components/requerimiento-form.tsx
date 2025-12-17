@@ -300,23 +300,6 @@ export function RequerimientoForm({
                     <div className="w-2 h-2  rounded-full mr-3"></div>
                     Productos del Requerimiento *
                   </h3>
-                  <Button
-                    type="button"
-                    variant="default"
-                    size="sm"
-                    onClick={() =>
-                      append({
-                        fk_id_producto: 0,
-                        cantidad: 1,
-                        observaciones: "",
-                      })
-                    }
-                    disabled={loadingOptions}
-                    className="bg-green-600 hover:bg-green-700 text-white shadow-md"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Agregar Producto
-                  </Button>
                 </div>
 
                 <div className="space-y-4">
@@ -484,6 +467,25 @@ export function RequerimientoForm({
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="mt-6">
+                  <Button
+                    type="button"
+                    variant="default"
+                    size="sm"
+                    onClick={() =>
+                      append({
+                        fk_id_producto: 0,
+                        cantidad: 1,
+                        observaciones: "",
+                      })
+                    }
+                    disabled={loadingOptions}
+                    className="bg-green-600 hover:bg-green-700 text-white shadow-md"
+                  >
+                    <Plus className="w-auto h-4 mr-2" />
+                    Agregar Producto
+                  </Button>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t -mx-6 -mb-6 px-6 pb-6 rounded-b-lg">

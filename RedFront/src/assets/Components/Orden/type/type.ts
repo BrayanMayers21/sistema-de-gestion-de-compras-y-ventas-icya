@@ -47,7 +47,7 @@ export interface CreateOrdenCompraData {
   total: number;
   incluir_igv: boolean;
   observaciones?: string;
-  fk_idcodigos_contables: number;
+  fk_idobras: number;
   fk_idtipo_orden: number;
   fk_id_proveedor: number;
   // Array de detalles
@@ -75,7 +75,7 @@ export interface ProductoOption {
 }
 
 export interface CodigoContableOption {
-  idcodigos_contables: number;
+  idobras: number;
   codigo: string; // Cambiado de codigo_contable a codigo
   nom_obra: string; // Cambiado de nombre_contable a nom_obra
 }

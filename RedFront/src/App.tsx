@@ -7,6 +7,11 @@ import HomeOrden from "./assets/Pages/Orden/page";
 import HomeRequerimiento from "./assets/Components/Requerimientos/page";
 import HomeProducto from "./assets/Pages/Productos/page";
 import HomeCotizacionAntamina from "./assets/Pages/cotizacion_antamina/page";
+import Homeiniciodepagina from "./assets/Pages/Landing/page";
+import { ServicioDetail } from "./assets/Pages/Landing/servicio-detail";
+import { ObraDetail } from "./assets/Pages/Landing/obra-detail";
+import { ConsultoriaDetail } from "./assets/Pages/Landing/consultoria-detail";
+import HomeObra from "./assets/Pages/Obra/page";
 
 // Lazy imports
 const LoginPage = lazy(() =>
@@ -27,6 +32,9 @@ const DashboardLayout = lazy(
 const EmployeeManagement = lazy(
   () => import("./assets/Pages/Empleados/PageEmpleados")
 );
+const PageAsistencias = lazy(
+  () => import("./assets/Pages/Asistencias/PageAsistencias")
+);
 
 function App() {
   return (
@@ -34,7 +42,10 @@ function App() {
       <ScrollToTop />
       <Suspense fallback={<Loader3 />}>
         <Routes>
-          <Route path="/" element={<Redvel />} />
+          <Route path="/" element={<Homeiniciodepagina />} />
+          <Route path="/servicios/:id" element={<ServicioDetail />} />
+          <Route path="/obras/:id" element={<ObraDetail />} />
+          <Route path="/consultoria" element={<ConsultoriaDetail />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<Error404 />} />
           <Route path="/403" element={<Error403 />} />
@@ -63,6 +74,9 @@ function App() {
             <Route path="/orden" element={<HomeOrden />} />
             <Route path="/cotizaciones" element={<HomeRequerimiento />} />
             <Route path="/productos" element={<HomeProducto />} />
+            <Route path="/obras" element={<HomeObra />} />
+            <Route path="/asistencias" element={<PageAsistencias />} />
+            <Route path="/oficina-empleados" element={<EmployeeManagement />} />
             <Route
               path="/cotizaciones-antamina"
               element={<HomeCotizacionAntamina />}

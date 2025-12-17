@@ -1,109 +1,227 @@
-import { useEffect, useState } from "react";
-import { Pencil, Trash2, Plus } from "lucide-react";
+"use client";
 
-interface Empleado {
-  id: number;
-  nombre: string;
-  dni: string;
-  area: string;
-  cargo: string;
-  horario: string;
-  estado: string;
-}
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import toast from "react-hot-toast";
+import GenericDataTable from "../../Components/Tabla_general/generic-data-table";
+import { useGenericList } from "../../Components/Tabla_general/type/use-generic-list";
+import { EmpleadosService } from "../../Components/Empleados/services/empleados-service";
+import { EmpleadoForm } from "../../Components/Empleados/components/empleado-form";
+import { EmpleadoDetails } from "../../Components/Empleados/components/empleado-details";
+import {
+  empleadosColumns,
+  useEmpleadosActions,
+} from "../../Components/Empleados/config";
+import type {
+  EmpleadoItem,
+  CreateEmpleadoData,
+  UpdateEmpleadoData,
+} from "../../Components/Empleados/type/type";
 
-const empleadosMock: Empleado[] = [
-  {
-    id: 1,
-    nombre: "Ana López",
-    dni: "45678912",
-    area: "Contabilidad",
-    cargo: "Analista",
-    horario: "8:00 - 17:00",
-    estado: "Activo",
-  },
-  {
-    id: 2,
-    nombre: "Pedro Rojas",
-    dni: "33456789",
-    area: "Logística",
-    cargo: "Supervisor",
-    horario: "Noche",
-    estado: "Inactivo",
-  },
-  {
-    id: 3,
-    nombre: "Lucía Torres",
-    dni: "42345678",
-    area: "Recursos Humanos",
-    cargo: "Asistente",
-    horario: "8:00 - 16:00",
-    estado: "Activo",
-  },
-];
+export default function PageEmpleados() {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedEmpleado, setSelectedEmpleado] = useState<EmpleadoItem | null>(
+    null
+  );
 
-export default function EmployeeManagement() {
-  const [empleados] = useState<Empleado[]>(empleadosMock);
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = "GAAA";
+    document.title = "Gestión de Empleados - REDVEL";
     return () => {
       document.title = previousTitle;
     };
   }, []);
+
+  const {
+    items: empleados,
+    loading,
+    totalItems,
+    currentPage,
+    pageSize,
+    searchQuery,
+    handlePageChange,
+    handlePageSizeChange,
+    setSearchQuery,
+    handleSearch,
+    deleteItem,
+    refetch,
+    clearFilters,
+  } = useGenericList<EmpleadoItem>({
+    endpoint: "/api/empleados-listar",
+    enableCache: false,
+  });
+
+  // Función para forzar recarga múltiple
+  const forceRefresh = async () => {
+    console.log("Ejecutando recarga forzada...");
+    try {
+      await refetch();
+      setTimeout(async () => {
+        await refetch();
+        console.log("Recarga forzada completada");
+      }, 500);
+    } catch (error) {
+      console.error("Error en recarga forzada:", error);
+    }
+  };
+
+  // Usar las columnas definidas en el archivo de configuración
+  const columns = empleadosColumns;
+
+  // Funciones para manejar formularios
+  const handleCreateEmpleado = async (
+    data: CreateEmpleadoData | UpdateEmpleadoData
+  ): Promise<boolean> => {
+    try {
+      console.log("Creando empleado...", data);
+      const result = await EmpleadosService.crear(data as CreateEmpleadoData);
+      console.log("Empleado creado exitosamente:", result);
+
+      // Recargar la tabla inmediatamente después de crear
+      console.log("Recargando tabla...");
+      await forceRefresh();
+      console.log("Tabla recargada exitosamente");
+
+      toast.success("Empleado creado correctamente. Tabla actualizada.");
+      return true;
+    } catch (error: any) {
+      console.error("Error creating empleado:", error);
+      toast.error(error.response?.data?.error || "Error al crear el empleado");
+      return false;
+    }
+  };
+
+  const handleUpdateEmpleado = async (
+    data: CreateEmpleadoData | UpdateEmpleadoData
+  ): Promise<boolean> => {
+    if (!selectedEmpleado) return false;
+
+    const id = selectedEmpleado.idempleados;
+    if (!id) return false;
+
+    try {
+      console.log("Actualizando empleado...", data);
+      await EmpleadosService.actualizar(id, data as UpdateEmpleadoData);
+
+      // Recargar la tabla inmediatamente después de actualizar
+      console.log("Recargando tabla después de actualizar...");
+      await forceRefresh();
+      console.log("Tabla recargada después de actualizar");
+
+      toast.success("Empleado actualizado correctamente. Tabla actualizada.");
+      return true;
+    } catch (error: any) {
+      console.error("Error updating empleado:", error);
+      toast.error(
+        error.response?.data?.error || "Error al actualizar el empleado"
+      );
+      return false;
+    }
+  };
+
+  // Usar las acciones definidas en el archivo de configuración
+  const actions = useEmpleadosActions({
+    empleados,
+    setSelectedEmpleado,
+    setIsEditModalOpen,
+    setIsDetailModalOpen,
+    deleteItem,
+  });
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Gestión de Empleados</h2>
-        <button className="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Nuevo Empleado
-        </button>
+    <div className="container mx-auto py-0 space-y-4 p-3 sm:p-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Gestión de Empleados
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Administra los empleados de tu empresa.
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <Button onClick={() => setIsAddModalOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo Empleado
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              console.log("Recarga manual activada");
+              forceRefresh();
+              toast.success("Tabla actualizada manualmente");
+            }}
+          >
+            🔄 Recargar
+          </Button>
+        </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-100 text-left text-sm font-semibold text-gray-700">
-            <tr>
-              <th className="px-4 py-3">Nombre</th>
-              <th className="px-4 py-3">DNI</th>
-              <th className="px-4 py-3">Área</th>
-              <th className="px-4 py-3">Cargo</th>
-              <th className="px-4 py-3">Horario</th>
-              <th className="px-4 py-3">Estado</th>
-              <th className="px-4 py-3 text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 text-sm">
-            {empleados.map((empleado) => (
-              <tr key={empleado.id}>
-                <td className="px-4 py-2">{empleado.nombre}</td>
-                <td className="px-4 py-2">{empleado.dni}</td>
-                <td className="px-4 py-2">{empleado.area}</td>
-                <td className="px-4 py-2">{empleado.cargo}</td>
-                <td className="px-4 py-2">{empleado.horario}</td>
-                <td className="px-4 py-2">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      empleado.estado === "Activo"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {empleado.estado}
-                  </span>
-                </td>
-                <td className="px-4 py-2 text-center space-x-2">
-                  <button className="text-blue-600 hover:text-blue-800">
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button className="text-red-600 hover:text-red-800">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Tabla genérica */}
+      <GenericDataTable<EmpleadoItem>
+        columns={columns}
+        data={empleados}
+        actions={actions}
+        loading={loading}
+        totalItems={totalItems}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        searchQuery={searchQuery}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        onSearch={setSearchQuery}
+        onSearchClick={handleSearch}
+        onClearFilters={clearFilters}
+        onRefetch={refetch}
+        idField="idempleados"
+        pageTitle="Empleados"
+      />
+
+      {/* Modal para crear empleado */}
+      <EmpleadoForm
+        isOpen={isAddModalOpen}
+        onClose={() => {
+          console.log("Cerrando modal de creación...");
+          setIsAddModalOpen(false);
+          setTimeout(() => {
+            console.log("Recarga desde modal de creación...");
+            forceRefresh();
+          }, 200);
+        }}
+        onSubmit={handleCreateEmpleado}
+        mode="create"
+      />
+
+      {/* Modal para editar empleado */}
+      <EmpleadoForm
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          console.log("Cerrando modal de edición...");
+          setIsEditModalOpen(false);
+          setSelectedEmpleado(null);
+          setTimeout(() => {
+            console.log("Recarga desde modal de edición...");
+            forceRefresh();
+          }, 200);
+        }}
+        onSubmit={handleUpdateEmpleado}
+        mode="edit"
+        empleado={selectedEmpleado}
+      />
+
+      {/* Modal para ver detalles de empleado */}
+      <EmpleadoDetails
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedEmpleado(null);
+        }}
+        empleado={selectedEmpleado}
+      />
     </div>
   );
 }

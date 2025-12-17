@@ -28,13 +28,13 @@
         .header-table {
             width: 100%;
             border-collapse: collapse;
-            border: 3px solid #1f2937;
+            border: 3px solid #4CAF50;
             margin-bottom: 10px;
         }
 
         .logo-cell {
             width: 15%;
-            border-right: 2px solid #1f2937;
+            border-right: 2px solid #4CAF50;
             padding: 8px;
             text-align: center;
             vertical-align: middle;
@@ -58,7 +58,7 @@
 
         .title-cell {
             width: 60%;
-            border-right: 2px solid #1f2937;
+            border-right: 2px solid #4CAF50;
             padding: 10px;
             text-align: center;
             vertical-align: middle;
@@ -69,14 +69,14 @@
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 8px;
-            color: #1f2937;
+            color: #333;
             letter-spacing: 1px;
         }
 
         .title-sub {
             font-size: 14px;
             font-weight: bold;
-            color: #374151;
+            color: #FF9800;
         }
 
         .info-cell {
@@ -92,7 +92,7 @@
         }
 
         .info-table td {
-            border: 1px solid #374151;
+            border: 1px solid #ddd;
             padding: 6px 8px;
             font-size: 10px;
         }
@@ -101,26 +101,26 @@
             background: #e5e7eb;
             font-weight: bold;
             width: 45%;
-            color: #1f2937;
+            color: #333;
         }
 
         .company-info {
             width: 100%;
             border-collapse: collapse;
-            border: 2px solid #1f2937;
+            border: 2px solid #4CAF50;
             margin-bottom: 8px;
             page-break-inside: avoid;
         }
 
         .company-info td {
-            border: 1px solid #374151;
+            border: 1px solid #ddd;
             padding: 5px 8px;
             font-size: 9px;
             vertical-align: middle;
         }
 
         .section-title {
-            background: #1f2937;
+            background: #4CAF50;
             color: white;
             font-weight: bold;
             text-align: center;
@@ -132,14 +132,14 @@
         .details-table {
             width: 100%;
             border-collapse: collapse;
-            border: 2px solid #1f2937;
+            border: 2px solid #4CAF50;
             margin-bottom: 15px;
             page-break-inside: avoid;
         }
 
         .details-table th,
         .details-table td {
-            border: 1px solid #374151;
+            border: 1px solid #ddd;
             padding: 6px 4px;
             text-align: center;
             font-size: 9px;
@@ -147,7 +147,7 @@
         }
 
         .details-table th {
-            background: #1f2937;
+            background: #FF9800;
             color: white;
             font-weight: bold;
             font-size: 10px;
@@ -181,11 +181,11 @@
             width: 45%;
             float: right;
             border-collapse: collapse;
-            border: 2px solid #1f2937;
+            border: 2px solid #4CAF50;
         }
 
         .totals-table td {
-            border: 1px solid #374151;
+            border: 1px solid #ddd;
             padding: 6px 8px;
             font-size: 10px;
             vertical-align: middle;
@@ -195,11 +195,11 @@
             background: #e5e7eb;
             font-weight: bold;
             width: 65%;
-            color: #1f2937;
+            color: #333;
         }
 
         .totals-table tr:last-child td {
-            background: #1f2937;
+            background: #FF9800;
             color: white;
             font-weight: bold;
             font-size: 12px;
@@ -216,10 +216,10 @@
             width: 33.33%;
             text-align: center;
             padding: 35px 10px 10px 10px;
-            border-top: 3px solid #1f2937;
+            border-top: 3px solid #4CAF50;
             font-size: 10px;
             font-weight: bold;
-            color: #1f2937;
+            color: #333;
             background: #f8fafc;
         }
 
@@ -230,16 +230,16 @@
             line-height: 1.3;
             padding: 10px;
             background: #f8fafc;
-            border-left: 4px solid #1f2937;
-            color: #374151;
+            border-left: 4px solid #4CAF50;
+            color: #666;
         }
 
         .pedido-header {
-            background: #1f2937;
+            background: #4CAF50;
             color: white;
             text-align: center;
             padding: 6px;
-            border: 2px solid #1f2937;
+            border: 2px solid #4CAF50;
             font-weight: bold;
             margin-bottom: 0;
             font-size: 11px;

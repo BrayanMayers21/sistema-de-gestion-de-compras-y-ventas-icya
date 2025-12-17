@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ValidateController;
+use App\Http\Controllers\AsistenciaEmpleado\AsistenciaEmpleadoController;
 use App\Http\Controllers\Categorias\CategoriaControllers;
 use App\Http\Controllers\CotizacionAntamina\CotizacionAntaminaControllers;
+use App\Http\Controllers\Empleados\EmpleadosController;
+use App\Http\Controllers\Obras\ObrasControllers;
 use App\Http\Controllers\Orden\OrdenControllers;
 use App\Http\Controllers\Productos\ProductosControllers;
 use App\Http\Controllers\Requerimientos\RequerimientosControllers;
@@ -95,6 +98,24 @@ Route::middleware(['check.jwt'])->group(function () {
     Route::middleware(['check.permission:productos.delete'])->group(function () {
         Route::delete('/productos-eliminar/{id}', [ProductosControllers::class, 'eliminarProducto']);
     });
+
+    // ********************* OBRAS ********************* //
+    Route::middleware(['check.permission:productos.view'])->group(function () {
+        Route::get('/obras-listar', [ObrasControllers::class, 'ListarObras']);
+    });
+
+    Route::middleware(['check.permission:productos.create'])->group(function () {
+        Route::post('/obras-crear', [ObrasControllers::class, 'CrearObra']);
+    });
+
+    Route::middleware(['check.permission:productos.update'])->group(function () {
+        Route::put('/obras-actualizar', [ObrasControllers::class, 'ActualizarObra']);
+    });
+
+    Route::middleware(['check.permission:productos.delete'])->group(function () {
+        Route::delete('/obras-eliminar/{id}', [ObrasControllers::class, 'eliminarObra']);
+    });
+
     // ********************* REQUERIMIENTOS ********************* //
 
     Route::get('/requerimientos-listar', [RequerimientosControllers::class, 'listarRequerimientos']);
@@ -109,6 +130,52 @@ Route::middleware(['check.jwt'])->group(function () {
     Route::get('/cotizacion-antamina/show/{id}', [CotizacionAntaminaControllers::class, 'showCotizacion']);
     Route::put('/cotizacion-antamina/update/{id}', [CotizacionAntaminaControllers::class, 'updateCotizacion']);
     Route::delete('/cotizacion-antamina/delete/{id}', [CotizacionAntaminaControllers::class, 'deleteCotizacion']);
+
+    // ********************* EMPLEADOS ********************* //
+    Route::middleware(['check.permission:productos.view'])->group(function () {
+        Route::get('/empleados-listar', [EmpleadosController::class, 'listaEmpleados']);
+        Route::get('/empleados-mostrar/{id}', [EmpleadosController::class, 'show']);
+    });
+
+    Route::middleware(['check.permission:productos.create'])->group(function () {
+        Route::post('/empleados-crear', [EmpleadosController::class, 'create']);
+    });
+
+    Route::middleware(['check.permission:productos.update'])->group(function () {
+        Route::put('/empleados-actualizar/{id}', [EmpleadosController::class, 'edit']);
+    });
+
+    Route::middleware(['check.permission:productos.delete'])->group(function () {
+        Route::delete('/empleados-eliminar/{id}', [EmpleadosController::class, 'destroy']);
+    });
+
+    // Rutas para obtener opciones de selects de empleados
+    Route::get('/empleados-generos', [EmpleadosController::class, 'listarGeneros']);
+    Route::get('/empleados-cargos', [EmpleadosController::class, 'listarCargos']);
+
+    // ********************* ASISTENCIAS ********************* //
+    Route::middleware(['check.permission:productos.view'])->group(function () {
+        Route::get('/asistencias-listar', [AsistenciaEmpleadoController::class, 'ListaAsistencia']);
+        Route::get('/asistencias-mostrar/{id}', [AsistenciaEmpleadoController::class, 'DetalleAsistencia']);
+        Route::get('/asistencias-por-empleado/{idEmpleado}', [AsistenciaEmpleadoController::class, 'porEmpleado']);
+        Route::get('/asistencias-por-fechas', [AsistenciaEmpleadoController::class, 'porFechas']);
+    });
+
+    Route::middleware(['check.permission:productos.create'])->group(function () {
+        Route::post('/asistencias-registrar', [AsistenciaEmpleadoController::class, 'registrarAsistencia']);
+        Route::post('/asistencias-registrar-lista', [AsistenciaEmpleadoController::class, 'registrarListaAsistencias']);
+        Route::get('/asistencias-export-excel', [AsistenciaEmpleadoController::class, 'exportExcel']);
+        Route::get('/asistencias-export-pdf', [AsistenciaEmpleadoController::class, 'exportPdf']);
+    });
+
+    Route::middleware(['check.permission:productos.update'])->group(function () {
+        Route::put('/asistencias-actualizar/{id}', [AsistenciaEmpleadoController::class, 'ActualizarAsistencia']);
+        Route::put('/asistencias-actualizar-masivo', [AsistenciaEmpleadoController::class, 'ActualizarAsistencia']);
+    });
+
+    Route::middleware(['check.permission:productos.delete'])->group(function () {
+        Route::delete('/asistencias-eliminar/{id}', [AsistenciaEmpleadoController::class, 'EliminarAsistencia']);
+    });
 });
 
 
