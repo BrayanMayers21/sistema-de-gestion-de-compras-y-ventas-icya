@@ -1,6 +1,13 @@
 "use client";
 
-import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
+import {
+  MoreHorizontal,
+  Eye,
+  Pencil,
+  Trash2,
+  FileDown,
+  FileText,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,6 +25,8 @@ interface CotizacionesActionsProps {
   onView: (id: number) => void;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onExportExcel: (id: number) => void;
+  onExportPDF: (id: number) => void;
 }
 
 export function CotizacionesActions({
@@ -25,6 +34,8 @@ export function CotizacionesActions({
   onView,
   onEdit,
   onDelete,
+  onExportExcel,
+  onExportPDF,
 }: CotizacionesActionsProps) {
   return (
     <DropdownMenu>
@@ -53,6 +64,21 @@ export function CotizacionesActions({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          onClick={() => onExportExcel(cotizacion.idcotizaciones_antamina)}
+          className="cursor-pointer"
+        >
+          <FileDown className="mr-2 h-4 w-4" />
+          Descargar Excel
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => onExportPDF(cotizacion.idcotizaciones_antamina)}
+          className="cursor-pointer"
+        >
+          <FileText className="mr-2 h-4 w-4" />
+          Descargar PDF
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
           onClick={() => onDelete(cotizacion.idcotizaciones_antamina)}
           className="cursor-pointer text-red-600 focus:text-red-600"
         >
@@ -67,7 +93,9 @@ export function CotizacionesActions({
 export function useCotizacionesActions(
   onView: (id: number) => void,
   onEdit: (id: number) => void,
-  onDelete: (id: number) => void
+  onDelete: (id: number) => void,
+  onExportExcel: (id: number) => void,
+  onExportPDF: (id: number) => void
 ): ColumnDefinition<CotizacionAntamina> {
   return {
     key: "idcotizaciones_antamina",
@@ -80,6 +108,8 @@ export function useCotizacionesActions(
             onView={onView}
             onEdit={onEdit}
             onDelete={onDelete}
+            onExportExcel={onExportExcel}
+            onExportPDF={onExportPDF}
           />
         </div>
       );

@@ -1,0 +1,21 @@
+Código,Nombre,Descripción,Unidad de Medida,Categoría
+CEM001,Cemento Portland Tipo I,Cemento Portland tipo I 42.5kg para construcción,Bolsa,Cemento
+CEM002,Cemento Andino,Cemento Portland tipo II 42.5kg,Bolsa,Cemento
+,Arena Fina Lavada,Arena fina lavada para tarrajeo y acabados,Metro Cúbico,Arena
+,Arena Gruesa,Arena gruesa para concreto y mezclas,Metro Cúbico,Arena
+AGR001,Piedra Chancada 3/4,Piedra chancada 3/4 pulgada para concreto,Metro Cúbico,Agregados (Arena y Piedra)
+LAD001,Ladrillo King Kong 18H,Ladrillo King Kong de arcilla 18 huecos,Millar,Ladrillos y Bloques
+ACE001,Fierro Corrugado 3/8,Fierro corrugado 3/8 pulgada grado 60,Varilla,Acero de Refuerzo y Mallas
+ACE002,Malla Electrosoldada 6mm,Malla electrosoldada 6mm Q188 para losas,Plancha,Acero de Refuerzo y Mallas
+TUB001,Tubería PVC SAP 1/2,Tubería PVC SAP presión 1/2 pulgada 3 metros,Unidad,Tuberías y Accesorios (PVC/CPVC/HDPE)
+TUB002,Codo PVC 90° 1/2,Codo PVC 90 grados 1/2 pulgada para agua,Unidad,Tuberías y Accesorios (PVC/CPVC/HDPE)
+PIN001,Pintura Latex Blanco,Pintura latex interior blanco mate 5 galones,Galón,Pinturas y Recubrimientos
+PIN002,Esmalte Sintético Azul,Esmalte sintético azul para exteriores,Galón,Pinturas y Recubrimientos
+MAT001,Cable THW 12 AWG Rojo,Cable eléctrico THW calibre 12 color rojo,Metro,Materiales Eléctricos
+MAT002,Interruptor Simple 15A,Interruptor eléctrico simple 15A 250V blanco,Unidad,Materiales Eléctricos
+HER001,Martillo Carpintero,Martillo de acero con mango de madera 25oz,Unidad,Herramientas Manuales
+HER002,Pala Cuadrada,Pala cuadrada con mango de madera reforzado,Unidad,Herramientas Manuales
+HER003,Nivel Aluminio 60cm,Nivel de burbuja de aluminio 60 centímetros,Unidad,Herramientas Manuales
+,Clavos para Madera 3,Clavos de acero para madera 3 pulgadas,Kilo,Fijaciones y Anclajes
+,Tornillos Drywall 1-1/4,Tornillos autorroscantes para drywall 1-1/4 pulgadas,Caja,Fijaciones y Anclajes
+CER001,Cerámica Piso 45x45,Cerámica para piso color beige 45x45cm caja x 2m2,Caja,Pisos y Revestimientos Cerámicos

@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, FileSpreadsheet } from "lucide-react";
 import { useGenericList } from "../Tabla_general/type/use-generic-list";
 import GenericDataTable from "../Tabla_general/generic-data-table";
 import { productosColumns, useProductosActions } from "./config";
 import { ProductoForm } from "./components/producto-form";
 import { ProductoDetails } from "./components/producto-details";
+import { ProductoExcelUpload } from "./components/producto-excel-upload";
 import { ProductosService } from "./services/productos-service";
 import type {
   ProductoItem,
@@ -20,6 +21,7 @@ export default function ProductosPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isExcelUploadOpen, setIsExcelUploadOpen] = useState(false);
   const [selectedProducto, setSelectedProducto] = useState<ProductoItem | null>(
     null
   );
@@ -138,6 +140,13 @@ export default function ProductosPage() {
             Nuevo Producto
           </Button>
           <Button
+            variant="secondary"
+            onClick={() => setIsExcelUploadOpen(true)}
+          >
+            <FileSpreadsheet className="w-4 h-4 mr-2" />
+            Importar Excel
+          </Button>
+          <Button
             variant="outline"
             onClick={() => {
               console.log("Recarga manual activada");
@@ -211,6 +220,16 @@ export default function ProductosPage() {
           setSelectedProducto(null);
         }}
         producto={selectedProducto}
+      />
+
+      {/* Modal para importar Excel */}
+      <ProductoExcelUpload
+        isOpen={isExcelUploadOpen}
+        onClose={() => setIsExcelUploadOpen(false)}
+        onSuccess={() => {
+          console.log("Excel importado exitosamente, recargando tabla...");
+          forceRefresh();
+        }}
       />
     </div>
   );

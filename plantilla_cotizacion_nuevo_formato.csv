@@ -1,0 +1,10 @@
+PROVEEDOR:,Distribuidora de Materiales S.A.C.
+
+Nombre Producto,Cantidad,Precio Unitario,Subtotal
+Cemento Portland Tipo I x 42.5kg,50,28.50,=B4*C4
+Arena Gruesa m3,100,45.00,=B5*C5
+Ladrillos King Kong 18 huecos,500,0.85,=B6*C6
+Fierro Corrugado 1/2" x 9m,200,32.50,=B7*C7
+Tubo PVC 2" x 3m,75,12.00,=B8*C8
+
+TOTAL:,,,=SUM(D4:D8)

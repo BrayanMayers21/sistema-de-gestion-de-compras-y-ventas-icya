@@ -1,0 +1,11 @@
+Cliente,Descripción,Código Producto,Cantidad,Precio Unitario,Marca
+Empresa Minera S.A.,Cotización para proyecto Antamina - Fase 1,PROD001,100,25.50,Marca Premium
+Empresa Minera S.A.,Cotización para proyecto Antamina - Fase 1,PROD002,50,150.00,Marca Standard
+Empresa Minera S.A.,Cotización para proyecto Antamina - Fase 1,PROD003,75,89.99,Marca Plus
+Constructora ABC,Materiales de construcción general,PROD004,200,12.75,Genérico
+Constructora ABC,Materiales de construcción general,PROD005,150,45.00,Marca A
+Minera del Sur,Equipos de seguridad,PROD006,300,8.50,SafetyPro
+Minera del Sur,Equipos de seguridad,PROD007,500,5.25,SecureMax
+Empresa XYZ,Herramientas especializadas,PROD008,80,225.00,ToolMaster
+Servicios Industriales,Insumos varios,PROD009,1000,2.50,EconoLine
+Proyectos Norte,Material eléctrico,PROD010,120,67.80,ElectroPlus

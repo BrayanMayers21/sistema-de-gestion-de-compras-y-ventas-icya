@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('id_producto', true);
             $table->dateTime('fecha_registro')->useCurrent();
             $table->string('unidad_medida', 45);
+            $table->string('ruta_imagen',255 )->nullable();
             $table->string('codigo', 50)->unique('codigo');
             $table->string('nombre', 200)->index('idx_nombre');
             $table->text('descripcion')->nullable();

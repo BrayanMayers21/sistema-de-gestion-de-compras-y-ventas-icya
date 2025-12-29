@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detalle_cotizacion_antamina', function (Blueprint $table) {
             $table->integer('iddetalle_cotizacion_antamina')->autoIncrement()->primary();
-            $table->integer('cantidad');
+            $table->double('cantidad');
             $table->double('precio_unitario');
             $table->double('sub_total');
             $table->string('marca', 255);

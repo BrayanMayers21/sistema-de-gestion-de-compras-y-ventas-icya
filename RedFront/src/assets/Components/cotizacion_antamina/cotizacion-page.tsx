@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, FileSpreadsheet, FileDown, FileText } from "lucide-react";
 import { useGenericList } from "../Tabla_general/type/use-generic-list";
 import GenericDataTable from "../Tabla_general/generic-data-table";
 import {
@@ -11,6 +11,7 @@ import {
 } from "./config/cotizacion-index";
 import { CotizacionForm } from "./components/cotizacion-form";
 import { CotizacionDetails } from "./components/cotizacion-details";
+import { CotizacionExcelUpload } from "./components/cotizacion-excel-upload";
 import { CotizacionAntaminaService } from "./services/cotizacion-service";
 import toast from "react-hot-toast";
 import type {
@@ -23,6 +24,7 @@ export default function CotizacionAntaminaPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isExcelUploadOpen, setIsExcelUploadOpen] = useState(false);
   const [selectedCotizacionId, setSelectedCotizacionId] = useState<
     number | null
   >(null);
@@ -55,6 +57,27 @@ export default function CotizacionAntaminaPage() {
       }, 500);
     } catch (error) {
       console.error("Error en recarga forzada:", error);
+    }
+  };
+
+  // Funciones para exportar cotización individual
+  const handleExportarCotizacionExcel = async (id: number) => {
+    try {
+      await CotizacionAntaminaService.exportarCotizacionExcel(id);
+      toast.success("Excel de cotización descargado");
+    } catch (error) {
+      console.error("Error al exportar cotización a Excel:", error);
+      toast.error("Error al descargar el Excel");
+    }
+  };
+
+  const handleExportarCotizacionPDF = async (id: number) => {
+    try {
+      await CotizacionAntaminaService.exportarCotizacionPDF(id);
+      toast.success("PDF de cotización descargado");
+    } catch (error) {
+      console.error("Error al exportar cotización a PDF:", error);
+      toast.error("Error al descargar el PDF");
     }
   };
 
@@ -92,7 +115,9 @@ export default function CotizacionAntaminaPage() {
   const actionsColumn = useCotizacionesActions(
     handleViewCotizacion,
     handleEditCotizacion,
-    handleDeleteCotizacion
+    handleDeleteCotizacion,
+    handleExportarCotizacionExcel,
+    handleExportarCotizacionPDF
   );
   const columns = [...cotizacionesColumns, actionsColumn];
 
@@ -151,6 +176,27 @@ export default function CotizacionAntaminaPage() {
     }
   };
 
+  // Funciones para exportar
+  const handleExportarExcel = async () => {
+    try {
+      await CotizacionAntaminaService.exportarExcel();
+      toast.success("Excel descargado correctamente");
+    } catch (error) {
+      console.error("Error al exportar Excel:", error);
+      toast.error("Error al descargar el Excel");
+    }
+  };
+
+  const handleExportarPDF = async () => {
+    try {
+      await CotizacionAntaminaService.exportarPDF();
+      toast.success("PDF descargado correctamente");
+    } catch (error) {
+      console.error("Error al exportar PDF:", error);
+      toast.error("Error al descargar el PDF");
+    }
+  };
+
   return (
     <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
@@ -163,13 +209,39 @@ export default function CotizacionAntaminaPage() {
             Gestión de cotizaciones para el proyecto Antamina
           </p>
         </div>
-        <Button
-          onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Nueva Cotización
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Nueva Cotización
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => setIsExcelUploadOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            Importar Excel
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleExportarExcel}
+            className="flex items-center gap-2"
+          >
+            <FileDown className="w-4 h-4" />
+            Excel
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleExportarPDF}
+            className="flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            PDF
+          </Button>
+        </div>
       </div>
 
       {/* Tabla de cotizaciones */}
@@ -219,6 +291,15 @@ export default function CotizacionAntaminaPage() {
           setSelectedCotizacionId(null);
         }}
         cotizacionId={selectedCotizacionId}
+      />
+
+      <CotizacionExcelUpload
+        isOpen={isExcelUploadOpen}
+        onClose={() => setIsExcelUploadOpen(false)}
+        onSuccess={() => {
+          forceRefresh();
+          toast.success("Excel importado correctamente");
+        }}
       />
     </div>
   );

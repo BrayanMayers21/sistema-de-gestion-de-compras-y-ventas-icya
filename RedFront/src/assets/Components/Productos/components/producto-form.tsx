@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Package } from "lucide-react";
+import { Loader2, Package, ImagePlus, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { ProductosService } from "../services/productos-service";
 import type {
@@ -41,13 +41,12 @@ import type {
   CategoriaOption,
   ProductoItem,
 } from "../type/type";
+import Constantes from "@/assets/constants/constantes";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-// Schema de validación para crear producto
+// Schema de validación para crear producto (sin código, se genera automáticamente)
 const createProductoSchema = z.object({
-  codigo: z
-    .string()
-    .min(1, "El código es obligatorio")
-    .max(50, "Máximo 50 caracteres"),
   nombre: z
     .string()
     .min(1, "El nombre es obligatorio")
@@ -58,9 +57,10 @@ const createProductoSchema = z.object({
     .min(1, "La unidad de medida es obligatoria")
     .max(100, "Máximo 100 caracteres"),
   fk_id_categoria: z.number().min(1, "Debe seleccionar una categoría"),
+  imagen: z.any().optional(), // Archivo de imagen
 });
 
-// Schema de validación para editar producto (sin código)
+// Schema de validación para editar producto
 const updateProductoSchema = z.object({
   nombre: z
     .string()
@@ -72,6 +72,7 @@ const updateProductoSchema = z.object({
     .min(1, "La unidad de medida es obligatoria")
     .max(100, "Máximo 100 caracteres"),
   fk_id_categoria: z.number().min(1, "Debe seleccionar una categoría"),
+  imagen: z.any().optional(), // Archivo de imagen
 });
 
 type CreateProductoFormData = z.infer<typeof createProductoSchema>;
@@ -95,6 +96,10 @@ export function ProductoForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categorias, setCategorias] = useState<CategoriaOption[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
+  const [imagenPreview, setImagenPreview] = useState<string | null>(null);
+  const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [imagenError, setImagenError] = useState(false);
 
   // Usar el schema apropiado según el modo
   const schema =
@@ -102,21 +107,13 @@ export function ProductoForm({
 
   const form = useForm<CreateProductoFormData | UpdateProductoFormData>({
     resolver: zodResolver(schema),
-    defaultValues:
-      mode === "create"
-        ? {
-            codigo: "",
-            nombre: "",
-            descripcion: "",
-            unidad_medida: "",
-            fk_id_categoria: 0,
-          }
-        : {
-            nombre: "",
-            descripcion: "",
-            unidad_medida: "",
-            fk_id_categoria: 0,
-          },
+    defaultValues: {
+      nombre: "",
+      descripcion: "",
+      unidad_medida: "",
+      fk_id_categoria: 0,
+      imagen: undefined,
+    },
   });
 
   // Cargar categorías
@@ -127,7 +124,6 @@ export function ProductoForm({
         const categoriasRes = await ProductosService.obtenerCategorias();
         setCategorias(categoriasRes.data || []);
       } catch (error) {
-        console.error("Error cargando categorías:", error);
         toast.error("Error al cargar las categorías");
       } finally {
         setLoadingOptions(false);
@@ -147,38 +143,142 @@ export function ProductoForm({
         descripcion: producto.descripcion || "",
         unidad_medida: producto.unidad_medida,
         fk_id_categoria: producto.fk_id_categoria || 0,
+        imagen: producto.ruta_imagen,
       });
+      // Cargar imagen existente si hay
+      if (producto.ruta_imagen) {
+        const token = Cookies.get("token");
+        // Usar axios para obtener la imagen con autenticación
+        axios
+          .get(
+            `${Constantes.baseUrlBackend}/api/productos/imagen/${producto.id_producto}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              responseType: "blob", // Importante: recibir la respuesta como blob
+            }
+          )
+          .then((response) => {
+            // Crear URL temporal para el blob
+            const urlImagen = URL.createObjectURL(response.data);
+            setImagenPreview(urlImagen);
+            setImagenError(false);
+          })
+          .catch((error) => {
+            console.error("Error al cargar la imagen:", error);
+            setImagenPreview(null);
+            setImagenError(true);
+          });
+      } else {
+        setImagenPreview(null);
+        setImagenError(false);
+      }
+      setArchivoImagen(null);
     } else if (isOpen && mode === "create") {
       form.reset({
-        codigo: "",
         nombre: "",
         descripcion: "",
         unidad_medida: "",
         fk_id_categoria: 0,
+        imagen: undefined,
       });
+      setImagenPreview(null);
+      setArchivoImagen(null);
+      setImagenError(false);
     }
   }, [isOpen, mode, producto, form]);
+
+  // Función para procesar el archivo de imagen
+  const procesarImagen = (file: File, field: any) => {
+    // Validar tipo de archivo
+    const tiposPermitidos = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/gif",
+      "image/webp",
+    ];
+    if (!tiposPermitidos.includes(file.type)) {
+      toast.error("Formato no válido. Use: JPEG, PNG, JPG, GIF o WEBP");
+      return;
+    }
+
+    // Validar tamaño (2MB máximo)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("La imagen no debe pesar más de 2MB");
+      return;
+    }
+
+    setArchivoImagen(file);
+    field.onChange(file);
+
+    // Crear preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagenPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Manejadores de eventos drag and drop
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent, field: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      procesarImagen(file, field);
+    }
+  };
 
   const handleSubmit = async (
     data: CreateProductoFormData | UpdateProductoFormData
   ) => {
     setIsSubmitting(true);
     try {
-      console.log("Enviando formulario de producto...", data);
-      const success = await onSubmit(data);
-      console.log("Resultado del envío:", success);
+      // Crear FormData para enviar archivo
+      const formData = new FormData();
+      formData.append("nombre", data.nombre);
+      formData.append("descripcion", data.descripcion || "");
+      formData.append("unidad_medida", data.unidad_medida);
+      formData.append("fk_id_categoria", data.fk_id_categoria.toString());
+
+      // Agregar imagen si existe
+      if (archivoImagen) {
+        formData.append("imagen", archivoImagen);
+      }
+
+      const success = await onSubmit(formData as any);
 
       if (success) {
-        console.log(
-          "Producto procesado exitosamente, reseteando formulario..."
-        );
         form.reset();
+        setImagenPreview(null);
+        setArchivoImagen(null);
         setTimeout(() => {
           onClose();
         }, 100);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
       toast.error("Error al procesar el producto");
     } finally {
       setIsSubmitting(false);
@@ -213,27 +313,6 @@ export function ProductoForm({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Código - Solo en modo crear */}
-                  {mode === "create" && (
-                    <FormField
-                      control={form.control}
-                      name="codigo"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Código *</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Ej: PROD-001"
-                              {...field}
-                              disabled={isSubmitting || loadingOptions}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
-
                   {/* Código en modo edición - Solo lectura */}
                   {mode === "edit" && producto && (
                     <div className="space-y-2">
@@ -244,7 +323,8 @@ export function ProductoForm({
                         className="bg-muted"
                       />
                       <p className="text-xs text-muted-foreground">
-                        El código no puede ser modificado
+                        El código se generó automáticamente y no puede ser
+                        modificado
                       </p>
                     </div>
                   )}
@@ -302,6 +382,156 @@ export function ProductoForm({
                             {...field}
                             disabled={isSubmitting || loadingOptions}
                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Imagen del Producto */}
+                  <FormField
+                    control={form.control}
+                    name="imagen"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Imagen del Producto</FormLabel>
+                        <FormControl>
+                          <div className="space-y-4">
+                            {/* Zona de arrastrar y soltar */}
+                            <div
+                              onDragEnter={handleDragEnter}
+                              onDragOver={handleDragOver}
+                              onDragLeave={handleDragLeave}
+                              onDrop={(e) => handleDrop(e, field)}
+                              className={`relative border-2 border-dashed rounded-lg transition-all ${
+                                isDragging
+                                  ? "border-primary bg-primary/10 scale-[1.02]"
+                                  : "border-muted-foreground/25 hover:border-primary/50"
+                              } ${
+                                isSubmitting || loadingOptions
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : "cursor-pointer"
+                              }`}
+                            >
+                              {imagenPreview ? (
+                                // Preview de imagen
+                                <div className="relative w-full p-4">
+                                  <div className="relative w-full max-w-md mx-auto">
+                                    {imagenError ? (
+                                      <div className="w-full h-64 flex flex-col items-center justify-center bg-muted rounded-lg border border-destructive">
+                                        <X className="w-16 h-16 text-destructive mb-2" />
+                                        <p className="text-destructive font-medium">
+                                          Error al cargar imagen
+                                        </p>
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                          La imagen no existe o no se puede
+                                          acceder
+                                        </p>
+                                      </div>
+                                    ) : (
+                                      <img
+                                        src={imagenPreview}
+                                        alt="Preview"
+                                        className="w-full h-64 object-cover rounded-lg border"
+                                        onError={() => {
+                                          console.error(
+                                            "Error cargando imagen:",
+                                            imagenPreview
+                                          );
+                                          setImagenError(true);
+                                          toast.error(
+                                            "No se pudo cargar la imagen del producto"
+                                          );
+                                        }}
+                                        onLoad={() => {
+                                          console.log(
+                                            "Imagen cargada correctamente:",
+                                            imagenPreview
+                                          );
+                                        }}
+                                      />
+                                    )}
+                                    <Button
+                                      type="button"
+                                      variant="destructive"
+                                      size="icon"
+                                      className="absolute top-2 right-2 shadow-lg"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setImagenPreview(null);
+                                        setArchivoImagen(null);
+                                        setImagenError(false);
+                                        field.onChange(undefined);
+                                      }}
+                                      disabled={isSubmitting}
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                  <p className="text-center text-sm text-muted-foreground mt-3">
+                                    Arrastra otra imagen o haz clic para cambiar
+                                  </p>
+                                </div>
+                              ) : (
+                                // Zona vacía para arrastrar
+                                <div className="flex flex-col items-center justify-center p-8 py-12">
+                                  <ImagePlus
+                                    className={`w-16 h-16 mb-4 transition-all ${
+                                      isDragging
+                                        ? "text-primary scale-110"
+                                        : "text-muted-foreground"
+                                    }`}
+                                  />
+                                  <p
+                                    className={`text-base font-medium mb-2 transition-colors ${
+                                      isDragging
+                                        ? "text-primary"
+                                        : "text-foreground"
+                                    }`}
+                                  >
+                                    {isDragging
+                                      ? "¡Suelta la imagen aquí!"
+                                      : "Arrastra y suelta una imagen"}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground mb-4">
+                                    o haz clic para seleccionar
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={isSubmitting || loadingOptions}
+                                    onClick={() =>
+                                      document
+                                        .getElementById("imagen-input")
+                                        ?.click()
+                                    }
+                                  >
+                                    Seleccionar archivo
+                                  </Button>
+                                </div>
+                              )}
+
+                              {/* Input oculto para selección manual */}
+                              <Input
+                                id="imagen-input"
+                                type="file"
+                                accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    procesarImagen(file, field);
+                                  }
+                                }}
+                                disabled={isSubmitting || loadingOptions}
+                              />
+                            </div>
+
+                            <p className="text-xs text-muted-foreground text-center">
+                              Formatos: JPEG, PNG, JPG, GIF, WEBP • Máximo: 2MB
+                            </p>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

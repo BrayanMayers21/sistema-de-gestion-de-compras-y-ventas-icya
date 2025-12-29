@@ -46,7 +46,6 @@ export function ProductoDetails({
           setProductoDetalle(response.data);
         }
       } catch (error) {
-        console.error("Error cargando detalles del producto:", error);
         toast.error("Error al cargar los detalles del producto");
       } finally {
         setLoading(false);

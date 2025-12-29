@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitud de Cotización</title>
+    <title>Cotización {{ $cotizacion->numero_cot }}</title>
     <style>
         * {
             margin: 0;
@@ -29,7 +29,6 @@
             background: white;
         }
 
-        /* Header simple y efectivo */
         .header {
             width: 100%;
             border-bottom: 2px solid #4CAF50;
@@ -102,8 +101,7 @@
             border: 1px solid #ddd;
         }
 
-        /* Información del proveedor */
-        .proveedor-info {
+        .info-box {
             width: 100%;
             margin: 20px 0;
             background: #f9f9f9;
@@ -124,7 +122,7 @@
         .info-label {
             font-weight: bold;
             color: #333;
-            width: 120px;
+            width: 180px;
             font-size: 12px;
         }
 
@@ -133,79 +131,7 @@
             font-size: 12px;
         }
 
-        /* Tabla de productos simple */
-        .productos-table {
-            width: 100%;
-            margin: 20px 0;
-            border-collapse: collapse;
-            border: 1px solid #ddd;
-        }
-
-        .productos-table th {
-            background: #FF9800;
-            color: white;
-            padding: 12px 8px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 11px;
-            border: 1px solid #FF9800;
-        }
-
-        .productos-table td {
-            padding: 10px 8px;
-            text-align: center;
-            border: 1px solid #ddd;
-            font-size: 11px;
-            background: white;
-        }
-
-        .productos-table tbody tr:nth-child(even) td {
-            background-color: #f9f9f9;
-        }
-
-        .descripcion {
-            text-align: left !important;
-            padding-left: 10px !important;
-        }
-
-        .cantidad-col {
-            width: 80px;
-        }
-
-        .descripcion-col {
-            width: 300px;
-        }
-
-        .precio-col {
-            width: 100px;
-        }
-
-        .total-col {
-            width: 100px;
-        }
-
-        /* Sección de totales simple */
-        .totales-section {
-            margin-top: 25px;
-            width: 100%;
-        }
-
-        .totales-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .totales-table td {
-            vertical-align: top;
-            padding: 0;
-        }
-
-        .observaciones-cell {
-            width: 60%;
-            padding-right: 30px;
-        }
-
-        .observaciones-title {
+        .section-title {
             font-weight: bold;
             color: #333;
             margin-bottom: 10px;
@@ -214,62 +140,103 @@
             border-bottom: 1px solid #ddd;
         }
 
-        .observaciones-content {
-            background: #f9f9f9;
-            padding: 15px;
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        thead {
+            background: #FF9800;
+            color: white;
+        }
+
+        thead th {
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+            border: 1px solid #FF9800;
+        }
+
+        tbody td {
+            padding: 10px 8px;
+            text-align: center;
             border: 1px solid #ddd;
             font-size: 11px;
-            line-height: 1.4;
-        }
-
-        .totales-cell {
-            width: 40%;
-        }
-
-        .totales-box {
-            border: 1px solid #ddd;
             background: white;
         }
 
+        tbody tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
         .total-row {
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-            font-size: 11px;
-        }
-
-        .total-row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        .total-subtotal {
-            background: #f5f5f5;
-        }
-
-        .total-impuesto {
-            background: #fff3cd;
-        }
-
-        .total-final {
-            background: #FF9800;
+            font-weight: bold;
+            background-color: #4CAF50 !important;
             color: white;
-            font-weight: bold;
-            border-bottom: none;
         }
 
-        .total-label {
-            float: left;
-            font-weight: bold;
+        .total-row td {
+            padding: 12px 8px;
+            font-size: 12px;
+            border: 1px solid #4CAF50;
         }
 
-        .total-value {
-            float: right;
-            font-weight: bold;
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
         }
 
+        .numero-cot {
+            color: #FF9800;
+            font-weight: bold;
+            font-size: 14px;
+        }
 
-        /* Ajustes para PDF */
+        .producto-nombre {
+            font-weight: 500;
+            color: #333;
+            text-align: left !important;
+            padding-left: 10px !important;
+        }
+
+        .categoria {
+            color: #666;
+            font-size: 10px;
+        }
+
+        .precio {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+
+        .resumen-box {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #FF9800;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
         @page {
             margin: 2cm;
             size: A4;
@@ -315,94 +282,85 @@
                         <div class="company-subtitle">RUC: 20533984992</div>
                     </td>
                     <td class="title-cell">
-                        <div class="main-title">Solicitud de Cotización</div>
-                        <div class="document-number">
-                            {{ date('Y') }}-{{ str_pad($requerimiento->numero_requerimiento ?? '0001', 4, '0', STR_PAD_LEFT) }}
-                        </div>
+                        <div class="main-title">COTIZACIÓN</div>
+                        <div class="document-number">{{ $cotizacion->numero_cot }}</div>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Información del proveedor -->
-        <div class="proveedor-info">
+        <!-- Información de la cotización -->
+        <div class="info-box">
             <table class="info-table" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td class="info-label">PROVEEDOR:</td>
-                    <td class="info-value">{{ $proveedor->razon_social ?? 'No especificado' }}</td>
+                    <td class="info-label">N° DE COTIZACIÓN:</td>
+                    <td class="info-value numero-cot">{{ $cotizacion->numero_cot }}</td>
                 </tr>
                 <tr>
                     <td class="info-label">FECHA:</td>
-                    <td class="info-value">{{ $requerimiento->fecha_requerimiento->format('d/m/Y') }}</td>
+                    <td class="info-value">{{ date('d/m/Y', strtotime($cotizacion->fecha_cot)) }}</td>
                 </tr>
                 <tr>
-                    <td class="info-label">E-MAIL:</td>
-                    <td class="info-value">{{ $proveedor->email ?? 'No especificado' }}</td>
+                    <td class="info-label">PROVEEDOR/CLIENTE:</td>
+                    <td class="info-value">{{ $cotizacion->cliente }}</td>
                 </tr>
                 <tr>
-                    <td class="info-label">DIRECCIÓN:</td>
-                    <td class="info-value">{{ $proveedor->direccion ?? 'No especificado' }}</td>
+                    <td class="info-label">DESCRIPCIÓN:</td>
+                    <td class="info-value">{{ $cotizacion->descripcion ?: 'Sin descripción' }}</td>
                 </tr>
             </table>
         </div>
 
+        <div class="section-title">DETALLE DE PRODUCTOS</div>
+
         <!-- Tabla de productos -->
-        <table class="productos-table" cellpadding="0" cellspacing="0">
+        <table cellpadding="0" cellspacing="0">
             <thead>
                 <tr>
-                    <th class="cantidad-col">Cant.</th>
-                    <th class="descripcion-col">Descripción</th>
-                    <th class="unidad-col">UNIDAD</th>
-                    <th class="precio-col">OBSERVACIONES</th>
+                    <th width="5%">#</th>
+                    <th width="40%">Producto</th>
+                    <th width="15%">Categoría</th>
+                    <th width="10%">Cantidad</th>
+                    <th width="15%">Precio Unit.</th>
+                    <th width="15%">Subtotal</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($detalles as $detalle)
-                    <tr>
-                        <td>{{ number_format((float) ($detalle['cantidad'] ?? 0), 2) }}</td>
-                        <td class="descripcion">{{ $detalle['descripcion'] ?? '' }}</td>
-                        <td>{{ $detalle['unidad_medida'] ?? '' }}</td>
-                        <td>{{ $detalle['observaciones'] ?? '' }}</td>
+                @php
+                    $numero = 1;
+                @endphp
 
+                @foreach($cotizacion->detalles as $detalle)
+                    <tr>
+                        <td class="text-center">{{ $numero++ }}</td>
+                        <td class="producto-nombre">{{ $detalle->producto->nombre }}</td>
+                        <td class="categoria">{{ $detalle->producto->categoria->nombre ?? '-' }}</td>
+                        <td class="text-center">{{ number_format($detalle->cantidad, 2) }}</td>
+                        <td class="text-right precio">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
+                        <td class="text-right precio">S/ {{ number_format($detalle->sub_total, 2) }}</td>
                     </tr>
                 @endforeach
+
+                <tr class="total-row">
+                    <td colspan="5" class="text-right"><strong>TOTAL:</strong></td>
+                    <td class="text-right"><strong>S/ {{ number_format($cotizacion->costo_total, 2) }}</strong></td>
+                </tr>
             </tbody>
         </table>
 
-        <!-- Observaciones y totales -->
-        <div class="totales-section">
-            <table class="totales-table" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td class="observaciones-cell">
-                        <div class="observaciones-title">Observaciones</div>
-                        <div class="observaciones-content">
-                            <strong>Asunto:</strong> Atención urgente - Solicitud con plazo máximo hoy.<br><br>
-                            Estimados proveedores, agradezco su pronta respuesta y confirmación de atención para
-                            proceder con la evaluación correspondiente.
-                        </div>
-                    </td>
-                    <td class="totales-cell">
-                        <div class="totales-box">
-                            <div class="total-row total-subtotal">
-                                <span class="total-label">Subtotal</span>
-                                <span class="total-value">S/. --------</span>
-                            </div>
-                            <div class="total-row total-impuesto">
-                                <span class="total-label">Impuestos</span>
-                                <span class="total-value">S/. --------</span>
-                            </div>
-                            <div class="total-row total-final">
-                                <span class="total-label">Total a Pagar</span>
-                                <span class="total-value">S/. --------</span>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+        <!-- Resumen -->
+        <div class="resumen-box">
+            <strong>Resumen:</strong><br>
+            Total de productos: <strong>{{ $cotizacion->detalles->count() }}</strong><br>
+            Cantidad total de items: <strong>{{ number_format($cotizacion->detalles->sum('cantidad'), 2) }}</strong><br>
+            Costo total: <strong>S/ {{ number_format($cotizacion->costo_total, 2) }}</strong>
         </div>
 
-
-
+        <!-- Footer -->
+        <div class="footer">
+            Documento generado el {{ $fecha_generacion }}<br>
+            Sistema de Gestión de Cotizaciones - Antamina © {{ date('Y') }}
+        </div>
     </div>
 </body>
 

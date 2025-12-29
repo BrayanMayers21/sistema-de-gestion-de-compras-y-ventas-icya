@@ -414,39 +414,100 @@ export function CotizacionForm({
                         <FormField
                           control={form.control}
                           name={`detalles.${index}.fk_id_producto`}
-                          render={({ field }) => (
-                            <FormItem className="lg:col-span-2">
-                              <FormLabel>Producto *</FormLabel>
-                              <Select
-                                onValueChange={(value) =>
-                                  field.onChange(Number(value))
-                                }
-                                value={
-                                  field.value > 0
-                                    ? field.value.toString()
-                                    : undefined
-                                }
-                                disabled={loadingOptions}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Seleccione un producto" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {productos.map((producto) => (
-                                    <SelectItem
-                                      key={producto.id_producto}
-                                      value={producto.id_producto.toString()}
-                                    >
-                                      {producto.codigo} - {producto.nombre}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                          render={({ field }) => {
+                            const [searchProducto, setSearchProducto] =
+                              useState("");
+
+                            const productosFiltrados = productos.filter(
+                              (producto) => {
+                                const codigo = producto.codigo || "";
+                                const nombre = producto.nombre || "";
+                                const searchTerm = searchProducto.toLowerCase();
+
+                                return (
+                                  codigo.toLowerCase().includes(searchTerm) ||
+                                  nombre.toLowerCase().includes(searchTerm)
+                                );
+                              }
+                            );
+
+                            return (
+                              <FormItem className="lg:col-span-2">
+                                <FormLabel>Producto *</FormLabel>
+                                <Select
+                                  onValueChange={(value) =>
+                                    field.onChange(Number(value))
+                                  }
+                                  value={
+                                    field.value > 0
+                                      ? field.value.toString()
+                                      : undefined
+                                  }
+                                  disabled={loadingOptions}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Seleccione un producto">
+                                        {field.value
+                                          ? productos.find(
+                                              (p) =>
+                                                p.id_producto === field.value
+                                            )?.codigo +
+                                            " - " +
+                                            productos.find(
+                                              (p) =>
+                                                p.id_producto === field.value
+                                            )?.nombre
+                                          : "Seleccione un producto"}
+                                      </SelectValue>
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <div className="p-2">
+                                      <Input
+                                        placeholder="Buscar producto..."
+                                        value={searchProducto}
+                                        onChange={(e) => {
+                                          e.stopPropagation();
+                                          setSearchProducto(e.target.value);
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onKeyDown={(e) => e.stopPropagation()}
+                                        className="mb-2"
+                                      />
+                                    </div>
+                                    {loadingOptions ? (
+                                      <div className="flex items-center justify-center py-4">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span className="ml-2 text-sm">
+                                          Cargando...
+                                        </span>
+                                      </div>
+                                    ) : productosFiltrados.length === 0 ? (
+                                      <div className="py-4 text-center text-sm text-muted-foreground">
+                                        No se encontraron productos
+                                      </div>
+                                    ) : (
+                                      productosFiltrados.map((producto) => (
+                                        <SelectItem
+                                          key={producto.id_producto}
+                                          value={producto.id_producto.toString()}
+                                        >
+                                          <div className="flex flex-col">
+                                            <span className="font-medium">
+                                              {producto.codigo} -{" "}
+                                              {producto.nombre}
+                                            </span>
+                                          </div>
+                                        </SelectItem>
+                                      ))
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            );
+                          }}
                         />
 
                         <FormField

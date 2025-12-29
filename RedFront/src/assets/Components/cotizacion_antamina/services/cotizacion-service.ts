@@ -149,4 +149,150 @@ export class CotizacionAntaminaService {
       };
     }
   }
+
+  // Método para subir archivo Excel con cotizaciones
+  static async subirExcel(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const token = Cookies.get("token");
+    const response = await axios.post(
+      `${Constantes.baseUrlBackend}/api/cotizacion-antamina/importar-excel`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
+
+  // Método para descargar plantilla Excel
+  static async descargarPlantillaExcel(): Promise<void> {
+    const token = Cookies.get("token");
+    const response = await axios.get(
+      `${Constantes.baseUrlBackend}/api/cotizacion-antamina/plantilla-excel`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    // Crear un link temporal para descargar el archivo
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "plantilla_cotizaciones_antamina.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  // Método para exportar lista de cotizaciones a Excel
+  static async exportarExcel(): Promise<void> {
+    const token = Cookies.get("token");
+    const response = await axios.get(
+      `${Constantes.baseUrlBackend}/api/cotizacion-antamina/exportar-excel`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `cotizaciones_antamina_${new Date().toISOString().split("T")[0]}.xlsx`
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  // Método para exportar lista de cotizaciones a PDF
+  static async exportarPDF(): Promise<void> {
+    const token = Cookies.get("token");
+    const response = await axios.get(
+      `${Constantes.baseUrlBackend}/api/cotizacion-antamina/exportar-pdf`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `cotizaciones_antamina_${new Date().toISOString().split("T")[0]}.pdf`
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  // Método para exportar una cotización específica a Excel
+  static async exportarCotizacionExcel(id: number): Promise<void> {
+    const token = Cookies.get("token");
+    const response = await axios.get(
+      `${Constantes.baseUrlBackend}/api/cotizacion-antamina/exportar-excel/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `cotizacion_${id}_${new Date().toISOString().split("T")[0]}.xlsx`
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
+  // Método para exportar una cotización específica a PDF
+  static async exportarCotizacionPDF(id: number): Promise<void> {
+    const token = Cookies.get("token");
+    const response = await axios.get(
+      `${Constantes.baseUrlBackend}/api/cotizacion-antamina/exportar-pdf/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `cotizacion_${id}_${new Date().toISOString().split("T")[0]}.pdf`
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
 }

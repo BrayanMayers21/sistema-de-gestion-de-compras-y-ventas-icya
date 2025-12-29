@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ValidateController;
 use App\Http\Controllers\AsistenciaEmpleado\AsistenciaEmpleadoController;
 use App\Http\Controllers\Categorias\CategoriaControllers;
 use App\Http\Controllers\CotizacionAntamina\CotizacionAntaminaControllers;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Empleados\EmpleadosController;
 use App\Http\Controllers\Obras\ObrasControllers;
 use App\Http\Controllers\Orden\OrdenControllers;
@@ -86,10 +87,13 @@ Route::middleware(['check.jwt'])->group(function () {
         Route::get('/productos-mostrar/{id}', [ProductosControllers::class, 'mostrarProducto']);
         Route::get('/productos-materiales', [ProductosControllers::class, 'listarProductos']);
         Route::get('/productos-categorias', [ProductosControllers::class, 'listarCategorias']);
+        Route::get('/productos/imagen/{id}', [ProductosControllers::class, 'obtenerImagen']);
+        Route::get('/productos-plantilla-excel', [ProductosControllers::class, 'descargarPlantillaExcel']);
     });
 
     Route::middleware(['check.permission:productos.create'])->group(function () {
         Route::post('/productos-crear', [ProductosControllers::class, 'crearProducto']);
+        Route::post('/productos-importar-excel', [ProductosControllers::class, 'importarExcel']);
     });
 
     Route::middleware(['check.permission:productos.update'])->group(function () {
@@ -130,6 +134,16 @@ Route::middleware(['check.jwt'])->group(function () {
     Route::get('/cotizacion-antamina/show/{id}', [CotizacionAntaminaControllers::class, 'showCotizacion']);
     Route::put('/cotizacion-antamina/update/{id}', [CotizacionAntaminaControllers::class, 'updateCotizacion']);
     Route::delete('/cotizacion-antamina/delete/{id}', [CotizacionAntaminaControllers::class, 'deleteCotizacion']);
+
+    // Excel Import/Export para Cotizaciones Antamina
+    Route::get('/cotizacion-antamina/plantilla-excel', [CotizacionAntaminaControllers::class, 'descargarPlantillaExcel']);
+    Route::post('/cotizacion-antamina/importar-excel', [CotizacionAntaminaControllers::class, 'importarExcel']);
+    Route::get('/cotizacion-antamina/exportar-excel', [CotizacionAntaminaControllers::class, 'exportarExcel']);
+    Route::get('/cotizacion-antamina/exportar-pdf', [CotizacionAntaminaControllers::class, 'exportarPDF']);
+
+    // Exportar cotización individual
+    Route::get('/cotizacion-antamina/exportar-excel/{id}', [CotizacionAntaminaControllers::class, 'exportarCotizacionExcel']);
+    Route::get('/cotizacion-antamina/exportar-pdf/{id}', [CotizacionAntaminaControllers::class, 'exportarCotizacionPDF']);
 
     // ********************* EMPLEADOS ********************* //
     Route::middleware(['check.permission:productos.view'])->group(function () {
@@ -204,3 +218,8 @@ Route::prefix('obras-contables')->group(function () {
     Route::post('/reporte-por-fechas', [App\Http\Controllers\ObrasContables\ObrasContablesControllers::class, 'reportByDateRange']);
     Route::get('/stats', [App\Http\Controllers\ObrasContables\ObrasContablesControllers::class, 'getStats']);
 });
+
+// ********************* DASHBOARD ********************* //
+Route::get('/dashboard/obras', [DashboardController::class, 'getObras']);
+Route::post('/dashboard/productos-por-obra', [DashboardController::class, 'getProductosPorObra']);
+Route::post('/dashboard/detalle-producto', [DashboardController::class, 'getDetalleProducto']);

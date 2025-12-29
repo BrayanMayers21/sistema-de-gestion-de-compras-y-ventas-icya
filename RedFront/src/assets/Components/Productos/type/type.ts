@@ -5,25 +5,22 @@ export interface ProductoItem {
   producto: string;
   descripcion: string | null;
   unidad_medida: string;
+  ruta_imagen?: string | null;
   categoria: string;
   fk_id_categoria?: number; // ID de categoría para edición
 }
 
 // Interfaz para crear/editar producto
 export interface CreateProductoData {
-  codigo: string;
   nombre: string;
   descripcion?: string;
   unidad_medida: string;
+  ruta_imagen?: string;
   fk_id_categoria: number;
 }
 
 // Interfaz para actualizar producto (sin código ya que es único)
-export interface UpdateProductoData {
-  nombre: string;
-  descripcion?: string;
-  unidad_medida: string;
-  fk_id_categoria: number;
+export interface UpdateProductoData extends CreateProductoData{
 }
 
 // Interfaz para categorías

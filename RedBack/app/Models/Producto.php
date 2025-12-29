@@ -46,7 +46,8 @@ class Producto extends Model
 		'codigo',
 		'nombre',
 		'descripcion',
-		'fk_id_categoria'
+		'fk_id_categoria',
+		'ruta_imagen'
 	];
 
 	public function categoria()
