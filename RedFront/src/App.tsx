@@ -8,10 +8,12 @@ import HomeRequerimiento from "./assets/Components/Requerimientos/page";
 import HomeProducto from "./assets/Pages/Productos/page";
 import HomeCotizacionAntamina from "./assets/Pages/cotizacion_antamina/page";
 import Homeiniciodepagina from "./assets/Pages/Landing/page";
+import HomeRequerimientoObra from "./assets/Components/Requerimiento_obra/page";
 import { ServicioDetail } from "./assets/Pages/Landing/servicio-detail";
 import { ObraDetail } from "./assets/Pages/Landing/obra-detail";
 import { ConsultoriaDetail } from "./assets/Pages/Landing/consultoria-detail";
 import HomeObra from "./assets/Pages/Obra/page";
+import HomeCapacitaciones from "./assets/Pages/Capacitaciones/page";
 
 // Lazy imports
 const LoginPage = lazy(() =>
@@ -75,8 +77,13 @@ function App() {
             <Route path="/cotizaciones" element={<HomeRequerimiento />} />
             <Route path="/productos" element={<HomeProducto />} />
             <Route path="/obras" element={<HomeObra />} />
+            <Route
+              path="/requerimientos-obra"
+              element={<HomeRequerimientoObra />}
+            />
             <Route path="/asistencias" element={<PageAsistencias />} />
             <Route path="/oficina-empleados" element={<EmployeeManagement />} />
+            <Route path="/capacitaciones" element={<HomeCapacitaciones />} />
             <Route
               path="/cotizaciones-antamina"
               element={<HomeCotizacionAntamina />}

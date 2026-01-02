@@ -11,6 +11,7 @@ use App\Http\Controllers\Obras\ObrasControllers;
 use App\Http\Controllers\Orden\OrdenControllers;
 use App\Http\Controllers\Productos\ProductosControllers;
 use App\Http\Controllers\Requerimientos\RequerimientosControllers;
+use App\Http\Controllers\RequerimientoObraController;
 use App\Http\Controllers\Traduccion\TraduccionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -223,3 +224,43 @@ Route::prefix('obras-contables')->group(function () {
 Route::get('/dashboard/obras', [DashboardController::class, 'getObras']);
 Route::post('/dashboard/productos-por-obra', [DashboardController::class, 'getProductosPorObra']);
 Route::post('/dashboard/detalle-producto', [DashboardController::class, 'getDetalleProducto']);
+
+// ********************* REQUERIMIENTOS DE OBRA ********************* //
+// Opciones para selects
+Route::get('/requerimientos-obra/opciones/obras', [RequerimientoObraController::class, 'obtenerObras']);
+Route::get('/requerimientos-obra/opciones/productos', [RequerimientoObraController::class, 'obtenerProductos']);
+
+// Reportes
+Route::get('/requerimientos-obra/{id}/pdf', [RequerimientoObraController::class, 'generarPDF']);
+Route::get('/requerimientos-obra/{id}/excel', [RequerimientoObraController::class, 'generarExcel']);
+
+// CRUD de requerimientos de obra
+Route::get('/requerimientos-obra', [RequerimientoObraController::class, 'index']);
+Route::post('/requerimientos-obra', [RequerimientoObraController::class, 'store']);
+Route::get('/requerimientos-obra/{id}', [RequerimientoObraController::class, 'show']);
+Route::put('/requerimientos-obra/{id}', [RequerimientoObraController::class, 'update']);
+Route::delete('/requerimientos-obra/{id}', [RequerimientoObraController::class, 'destroy']);
+
+// Cambiar estado del requerimiento
+Route::patch('/requerimientos-obra/{id}/estado', [RequerimientoObraController::class, 'cambiarEstado']);
+
+// Marcar detalle como entregado
+Route::post('/requerimientos-obra/detalle/{idDetalle}/entregar', [RequerimientoObraController::class, 'marcarDetalleEntregado']);
+
+// ********************* CAPACITACIONES ********************* //
+// Opciones para selects
+Route::get('/capacitaciones/opciones/empleados', [App\Http\Controllers\CapacitacionController::class, 'obtenerEmpleados']);
+Route::get('/capacitaciones/opciones/tipos-actividad', [App\Http\Controllers\CapacitacionController::class, 'obtenerTiposActividad']);
+
+// Reportes
+Route::get('/capacitaciones/{id}/pdf', [App\Http\Controllers\CapacitacionController::class, 'generarPDF']);
+
+// Consultas específicas
+Route::get('/capacitaciones/empleado/{empleadoId}', [App\Http\Controllers\CapacitacionController::class, 'capacitacionesPorEmpleado']);
+
+// CRUD de capacitaciones
+Route::get('/capacitaciones', [App\Http\Controllers\CapacitacionController::class, 'index']);
+Route::post('/capacitaciones', [App\Http\Controllers\CapacitacionController::class, 'store']);
+Route::get('/capacitaciones/{id}', [App\Http\Controllers\CapacitacionController::class, 'show']);
+Route::put('/capacitaciones/{id}', [App\Http\Controllers\CapacitacionController::class, 'update']);
+Route::delete('/capacitaciones/{id}', [App\Http\Controllers\CapacitacionController::class, 'destroy']);

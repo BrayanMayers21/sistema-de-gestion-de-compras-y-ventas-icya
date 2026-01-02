@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Empleado extends Model
 {
@@ -38,5 +39,13 @@ class Empleado extends Model
     public function cargoEmpleado(): BelongsTo
     {
         return $this->belongsTo(CargoEmpleado::class, 'fk_idcargos_empleados', 'idcargos_empleados');
+    }
+
+    /**
+     * Relación con las capacitaciones del empleado
+     */
+    public function capacitaciones(): HasMany
+    {
+        return $this->hasMany(Capacitacion::class, 'fk_idempleados', 'idempleados');
     }
 }

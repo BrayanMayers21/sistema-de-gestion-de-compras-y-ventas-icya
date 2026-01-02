@@ -258,21 +258,21 @@
                     <th width="14%">Costo Total</th>
                 </tr>
             </thead>
-        <tbody>
-            @php
-                $totalGeneral = 0;
-                $totalCantidad = 0;
-                $totalProductos = 0;
-            @endphp
-
-            @foreach($cotizaciones as $cotizacion)
+            <tbody>
                 @php
-                    $cantidadTotal = $cotizacion->detalles->sum('cantidad');
-                    $numProductos = $cotizacion->detalles->count();
-                    $totalGeneral += $cotizacion->costo_total;
-                    $totalCantidad += $cantidadTotal;
-                    $totalProductos += $numProductos;
+                    $totalGeneral = 0;
+                    $totalCantidad = 0;
+                    $totalProductos = 0;
                 @endphp
+
+                @foreach($cotizaciones as $cotizacion)
+                    @php
+                        $cantidadTotal = $cotizacion->detalles->sum('cantidad');
+                        $numProductos = $cotizacion->detalles->count();
+                        $totalGeneral += $cotizacion->costo_total;
+                        $totalCantidad += $cantidadTotal;
+                        $totalProductos += $numProductos;
+                    @endphp
                     <tr>
                         <td class="numero-cot">{{ $cotizacion->numero_cot }}</td>
                         <td class="text-center">{{ date('d/m/Y', strtotime($cotizacion->fecha_cot)) }}</td>

@@ -14,6 +14,8 @@ import {
   ShieldCheck,
   Users,
   ClipboardCheck,
+  ClipboardList,
+  GraduationCap,
 } from "lucide-react";
 
 export interface MenuItem {
@@ -141,6 +143,13 @@ export const datosOpciones: MenuData = {
         icon: ClipboardCheck,
         clase: "",
       },
+      capacitaciones: {
+        permiso: "usuarios.view",
+        title: "Capacitaciones",
+        url: "/capacitaciones",
+        icon: GraduationCap,
+        clase: "",
+      },
       roles: {
         permiso: "usuarios.view",
         title: "Roles y Permisos",
@@ -222,6 +231,13 @@ export const datosOpciones: MenuData = {
         title: "Obras",
         url: "/obras",
         icon: Layers,
+        clase: "",
+      },
+      requerimientos: {
+        permiso: "usuarios.view",
+        title: "Requerimientos de Obra",
+        url: "/requerimientos-obra",
+        icon: ClipboardList,
         clase: "",
       },
     },
